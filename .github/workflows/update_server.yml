@@ -1,7 +1,8 @@
 on: 
   push:
   schedule:
-    - cron: 0 21 * * *
+    - cron: 0 0 * * *
+    - cron: 0 12 * * *
 jobs:
   json_update:
     name: Sever.json update
