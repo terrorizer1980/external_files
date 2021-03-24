@@ -1,8 +1,7 @@
 on: 
   push:
   schedule:
-    - cron: 0 0 * * *
-    - cron: 0 12 * * *
+    - cron: 0 */3 * * *
 name: Server.json auto update
 jobs:
   json_update:
@@ -13,6 +12,7 @@ jobs:
         uses: GitRML/delete-workflow-runs@main
         with:
           retain_days: 2
+          keep_minimum_runs: 1
       - name: install lynx
         run: sudo bash -c "apt update && apt install -y lynx"
       - name: Setup Node JS
