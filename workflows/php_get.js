@@ -4,6 +4,7 @@ const AdmZip = require("adm-zip");
 const { readFileSync, writeFileSync, mkdirSync } = require("fs");
 const {exportVariable} = require("@actions/core")
 const php_json = resolve(__dirname, "..", "php_bin.json")
+console.log(php_json);
 const repo_published = JSON.parse(readFileSync(php_json, "utf8"))
 const jekins_url_base = "https://jenkins.pmmp.io/job/PHP-7.4-Aggregate"
 const JekinsJSON = JSON.parse(execSync(`curl -sS "${jekins_url_base}/lastSuccessfulBuild/api/json"`))
@@ -14,7 +15,7 @@ if (JekinsJSON.displayName !== repo_published.release){
         let file_name = JekinsJSON.artifacts[index].relativePath
         repo_published.release = JekinsJSON.displayName
         let ZIPFileName = file_name.split(".tar.gz").join(".zip")
-        let ZIPFilePath = resolve(__dirname, "..", "php_files",ZIPFileName)
+        let ZIPFilePath = resolve(__dirname, "..", "php_files", ZIPFileName)
         let Path = resolve("/tmp", `php_bin_${Math.trunc(Math.random() * 10000000)}`)
         if (file_name.includes("debug")) console.log(`Skip: ${ZIPFileName}`);
         else {

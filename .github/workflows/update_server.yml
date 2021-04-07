@@ -59,15 +59,9 @@ jobs:
           draft: false
 
   bin_php:
-    name: Sever.json update
+    name: Update php_get.json
     runs-on: ubuntu-latest
     steps:
-      - name: Delete workflow runs
-        uses: GitRML/delete-workflow-runs@main
-        with:
-          retain_days: 2
-          keep_minimum_runs: 1
-
       - name: Setup Node JS
         uses: actions/setup-node@v1
         with:
@@ -79,7 +73,7 @@ jobs:
         run: |
           cd workflows/ 
           npm i --no-save
-      - name: Check Versions
+      - name: Check PHP Versions
         run: |
           cd workflows/ 
           tag_name="${{ github.run_id }}" node ./php_get.json
