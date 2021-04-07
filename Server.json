@@ -1,7 +1,7 @@
 {
     "java_latest": "1.16.5",
     "bedrock_latest": "1.16.220.02",
-    "PocketMine_latest": "3.18.2",
+    "PocketMine_latest": "3.19.0",
     "java": {
         "1.16.5": {
             "url": "https://launcher.mojang.com/v1/objects/1b557e7b033b583cd9f66746b7a9ab1ec1673ced/server.jar",
@@ -543,6 +543,10 @@
         },
         "3.18.2": {
             "url": "https://github.com/pmmp/PocketMine-MP/releases/download/3.18.2/PocketMine-MP.phar",
+            "data": "2021/4/7"
+        },
+        "3.19.0": {
+            "url": "https://github.com/pmmp/PocketMine-MP/releases/download/3.19.0/PocketMine-MP.phar",
             "data": "2021/4/7"
         }
     }
