@@ -57,8 +57,55 @@ jobs:
             owners
             maintainers
           draft: false
+
+  bin_php:
+    name: Sever.json update
+    runs-on: ubuntu-latest
+    steps:
       - name: Delete workflow runs
         uses: GitRML/delete-workflow-runs@main
         with:
-          retain_days: 1
+          retain_days: 2
           keep_minimum_runs: 1
+
+      - name: Setup Node JS
+        uses: actions/setup-node@v1
+        with:
+          node-version: 15.x
+      - uses: actions/checkout@master
+        with:
+            ref: main
+      - name: Install Node Depedencies
+        run: |
+          cd workflows/ 
+          npm i --no-save
+      - name: Check Versions
+        run: |
+          cd workflows/ 
+          node ./php_get.json
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        continue-on-error: true
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Sever.json update
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: PHP_bin_${{ github.run_id }}
+          delete-branch: true
+          base: main
+          title: 'Server.json update, check update in ${{ github.run_id }}'
+          body: |
+            Update report
+            - bedrock Version: ${{ env.bedrock_version }}
+            - java Version: ${{ env.java_version }}
+            - PocketMine Version: ${{ env.pocketmine_version }}
+          labels: |
+            Server_Update
+          team-reviewers: |
+            owners
+            maintainers
+          draft: false

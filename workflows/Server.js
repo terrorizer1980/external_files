@@ -10,7 +10,7 @@ const
 const new_Server = JSON.parse(old_Server_file)
 const url_linux = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-linux'| awk '/http/{print $2}'`).toString().replace("\n", ""),
     url_win = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-win'| awk '/http/{print $2}'`).toString().replace("\n", ""),
-    pocketmine_json = JSON.parse(execSync(`curl "https://api.github.com/repos/pmmp/PocketMine-MP/releases"`).toString())
+    pocketmine_json = JSON.parse(execSync(`curl -sS "https://api.github.com/repos/pmmp/PocketMine-MP/releases"`).toString())
 
 new_Server.PocketMine_latest = pocketmine_json[0].tag_name
 exportVariable("pocketmine_version", pocketmine_json[0].tag_name)
