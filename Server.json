@@ -1,6 +1,6 @@
 {
     "java_latest": "1.16.5",
-    "bedrock_latest": "1.16.210.06",
+    "bedrock_latest": "1.16.220.02",
     "PocketMine-MP_latest": null,
     "java": {
         "1.16.5": {
@@ -413,6 +413,11 @@
             "url_linux": "https://minecraft.azureedge.net/bin-linux/bedrock-server-1.6.1.0.zip",
             "url_windows": "https://minecraft.azureedge.net/bin-win/bedrock-server-1.6.1.0.zip",
             "data": null
+        },
+        "1.16.220.02": {
+            "url_linux": "https://minecraft.azureedge.net/bin-linux/bedrock-server-1.16.220.02.zip",
+            "url_windows": "https://minecraft.azureedge.net/bin-win/bedrock-server-1.16.220.02.zip",
+            "data": "7-4-2021"
         }
     },
     "PocketMine-MP": {}
