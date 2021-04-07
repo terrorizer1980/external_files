@@ -20,8 +20,14 @@ jobs:
         with:
           node-version: 15.x
       - uses: actions/checkout@master
-      - name: Check
-        run: cd workflows/ && node ./Server.js
+      - name: Install Node Depedencies
+        run: |
+          cd workflows/ 
+          npm i --no-save
+      - name: Check Versions
+        run: |
+          cd workflows/ 
+          node ./Server.js
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v3

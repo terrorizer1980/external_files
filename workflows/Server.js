@@ -6,7 +6,7 @@ const { resolve } = require("path")
 const {exportVariable} = require("@actions/core")
 const
     Server_path = resolve(__dirname ,"..", "Server.json"),
-old_Server_file = readFileSync(Server_path, "utf8");
+    old_Server_file = readFileSync(Server_path, "utf8");
 const new_Server = JSON.parse(old_Server_file)
 const url_linux = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-linux'| awk '/http/{print $2}'`).toString().replace("\n", "")
   const url_win = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-win'| awk '/http/{print $2}'`).toString().replace("\n", "")
