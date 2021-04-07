@@ -69,13 +69,10 @@ jobs:
       - uses: actions/checkout@master
         with:
             ref: main
-      - name: Install Node Depedencies
-        run: |
-          cd workflows/ 
-          npm install
       - name: Check PHP Versions
         run: |
-          cd workflows/ 
+          cd workflows/
+          npm install
           tag_name="${{ github.run_id }}" node ./php_get.json
 
       - name: Publish PHP files bin
