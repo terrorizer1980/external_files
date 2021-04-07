@@ -74,16 +74,37 @@ jobs:
           cd workflows/
           npm install
           tag_name="${{ github.run_id }}" node ./php_get.js
-
       - name: Publish PHP files bin
         if: '${{ env.upload}} === true'
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: Bds Maneger Version ${{ env.BDS_VER }}
+          name: PHP bin
           tag_name: ${{ github.run_id }}
-          files: 'php_files/*.zip'
+          files: php_files/*.zip
           body: |
-            
-            ${{ env.COMMIT_ME }}
+            Windows users install the [Microsoft Visual C ++ 2017 Redistributable](https://aka.ms/vs/15/release/vc_redist.x64.exe)
+      - run: rm -fv php_files/*.zip
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        continue-on-error: true
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Sever.json update
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: PHP_BIN_${{ github.run_id }}
+          delete-branch: true
+          base: main
+          title: 'php_bin.json update, check update in ${{ github.run_id }}'
+          body: |
+            Update report
+          labels: |
+            PHP_Update
+          team-reviewers: |
+            owners
+            maintainers
+          draft: false
