@@ -8,8 +8,20 @@ const
     Server_path = resolve(__dirname ,"..", "Server.json"),
     old_Server_file = readFileSync(Server_path, "utf8");
 const new_Server = JSON.parse(old_Server_file)
-const url_linux = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-linux'| awk '/http/{print $2}'`).toString().replace("\n", "")
-  const url_win = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-win'| awk '/http/{print $2}'`).toString().replace("\n", "")
+const url_linux = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-linux'| awk '/http/{print $2}'`).toString().replace("\n", ""),
+    url_win = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-win'| awk '/http/{print $2}'`).toString().replace("\n", ""),
+    pocketmine_json = JSON.parse(execSync(`curl "https://api.github.com/repos/pmmp/PocketMine-MP/releases"`).toString())
+
+for (let index in pocketmine_json){
+    let TagPocketMine = pocketmine_json[index].tag_name
+    if (old_Server_file.includes(TagPocketMine)) console.log(`Tag name exist: ${TagPocketMine}`);
+    else {
+        new_Server.PocketMine[TagPocketMine] = {
+            url_phar: `https://github.com/pmmp/PocketMine-MP/releases/download/${TagPocketMine}/PocketMine-MP.phar`
+        }
+    }
+}
+
 const server_version = url_win.split("-")[3].toString().replaceAll(".zip", "")
 exportVariable("bedrock_version", server_version)
 var exist_urls;
