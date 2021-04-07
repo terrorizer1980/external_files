@@ -73,7 +73,7 @@ jobs:
         run: |
           cd workflows/
           npm install
-          tag_name="${{ github.run_id }}" node ./php_get.json
+          tag_name="${{ github.run_id }}" node ./php_get.js
 
       - name: Publish PHP files bin
         if: '${{ env.upload}} === true'
