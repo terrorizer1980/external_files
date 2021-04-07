@@ -72,7 +72,7 @@ jobs:
       - name: Install Node Depedencies
         run: |
           cd workflows/ 
-          npm i --no-save
+          npm install
       - name: Check PHP Versions
         run: |
           cd workflows/ 
