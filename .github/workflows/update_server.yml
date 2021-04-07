@@ -32,7 +32,7 @@ jobs:
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
-          branch: main
+          branch: main_${{ github.run_id }}
           delete-branch: true
           title: 'Server.json update, check update in ${{ github.run_id }}'
           body: |
