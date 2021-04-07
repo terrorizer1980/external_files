@@ -12,12 +12,16 @@ const url_linux = execSync(`lynx -dump "https://www.minecraft.net/en-us/download
     url_win = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-win'| awk '/http/{print $2}'`).toString().replace("\n", ""),
     pocketmine_json = JSON.parse(execSync(`curl "https://api.github.com/repos/pmmp/PocketMine-MP/releases"`).toString())
 
+new_Server.PocketMine_latest = pocketmine_json[0].tag_name
+exportVariable("pocketmine_version", pocketmine_json[0].tag_name)
 for (let index in pocketmine_json){
     let TagPocketMine = pocketmine_json[index].tag_name
     if (old_Server_file.includes(TagPocketMine)) console.log(`Tag name exist: ${TagPocketMine}`);
     else {
+        let data = new Date(pocketmine_json[index].published_at)
         new_Server.PocketMine[TagPocketMine] = {
-            url_phar: `https://github.com/pmmp/PocketMine-MP/releases/download/${TagPocketMine}/PocketMine-MP.phar`
+            url: `https://github.com/pmmp/PocketMine-MP/releases/download/${TagPocketMine}/PocketMine-MP.phar`,
+            data: `${data.getFullYear()}/${data.getMonth() +1}/${data.getDate()}`
         }
     }
 }
@@ -34,10 +38,11 @@ if (exist_urls){
 }
 else {
     new_Server.bedrock_latest = server_version
+    let data = new Date()
     new_Server.bedrock[server_version] = {
         url_linux: url_linux,
         url_windows: url_win,
-        data: `${new Date().getDate()}-${new Date().getMonth()+1}-${new Date().getFullYear()}`
+        data: `${data.getFullYear()}/${data.getMonth() +1}/${data.getDate()}`
     }
     console.log(new_Server.bedrock);
 }
@@ -53,9 +58,10 @@ if (exist_urls_java){
 }
 else {
     new_Server.java_latest = java_version
+    let data = new Date()
     new_Server.java[java_version] = {
         url: url_java,
-        data: `${new Date().getDate()}-${new Date().getMonth()+1}-${new Date().getFullYear()}`
+        data: `${data.getFullYear()}/${data.getMonth() +1}/${data.getDate()}`
     }
     console.log(new_Server.java[java_version]);
 }

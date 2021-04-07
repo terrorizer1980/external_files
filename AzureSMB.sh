@@ -5,8 +5,15 @@ if ! command -v az &> /dev/null;then
     exit 1
 fi
 if ! command -v mount.cifs &> /dev/null;then
-    sudo apt install cifs-utils -y
+    echo "Install cifs-utils"
+    echo "Debian/Ubuntu: # apt install cifs-utils"
+    exit 1
 fi
+
+if [ -z "${1}" ];then echo "Set Resouce Group"; read 1;fi
+if [ -z "${2}" ];then echo "Storage Account"; read 2;fi
+if [ -z "${3}" ];then echo "File Share Name"; read 3;fi
+
 resourceGroupName="${1}"
 storageAccountName="${2}"
 fileShareName="${3}"
