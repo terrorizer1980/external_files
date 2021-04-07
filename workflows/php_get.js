@@ -20,7 +20,7 @@ if (JekinsJSON.displayName !== repo_published.release){
         if (file_name.includes("debug")) console.log(`Skip: ${ZIPFileName}`);
         else {
             let JSon_object = ZIPFileName.replaceAll(".zip", "").replaceAll("PHP-7.4-", "");
-            repo_published[JSon_object] = `https://github.com/The-Bds-Maneger/Bds-Maneger/releases/download/${process.env.tag_name}/${ZIPFileName}`
+            repo_published[JSon_object] = `https://github.com/The-Bds-Maneger/Raw_files/releases/${process.env.tag_name}/${ZIPFileName}`
             if (file_name.includes(".zip")) execSync(`curl -sS "${url_file}" --output "${ZIPFilePath}"`)
             else {
                 mkdirSync(Path)
