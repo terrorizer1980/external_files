@@ -75,7 +75,7 @@ jobs:
           npm install
           tag_name="${{ github.run_id }}" node ./php_get.js
       - name: Publish PHP files bin
-        if: '${{ env.upload}} === true'
+        if: env.upload == 'true'
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -87,7 +87,7 @@ jobs:
             Windows users install the [Microsoft Visual C ++ 2017 Redistributable](https://aka.ms/vs/15/release/vc_redist.x64.exe)
       - run: rm -fv php_files/*.zip
       - name: Create Pull Request
-        id: cpr
+        if: env.upload == 'true'
         uses: peter-evans/create-pull-request@v3
         continue-on-error: true
         with:
