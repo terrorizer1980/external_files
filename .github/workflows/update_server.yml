@@ -16,7 +16,7 @@ jobs:
           retain_days: 2
           keep_minimum_runs: 1
       - name: install lynx
-        run: sudo bash -c "apt update && apt install -y lynx"
+        run: sudo bash -c "apt update && apt install -y lynx wget curl"
       - name: Setup Node JS
         uses: actions/setup-node@v1
         with:

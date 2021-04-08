@@ -37,6 +37,10 @@ if (exist_urls){
     console.log("the bedrock platform is up to date, jumping");
 }
 else {
+    execSync(`wget "${url_linux}" -O bedrock.zip && unzip -o bedrock.zip -d ./`, {cwd: "/tmp"})
+    execSync(`zip linux_libries -r $(ldd /tmp/bedrock_server|awk '{print $3}' | tr "\n" " ")`, {
+        cwd: resolve(__dirname, "..")
+    })
     new_Server.bedrock_latest = server_version
     let data = new Date()
     new_Server.bedrock[server_version] = {
