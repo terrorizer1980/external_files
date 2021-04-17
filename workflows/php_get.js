@@ -7,7 +7,9 @@ const php_json = resolve(__dirname, "..", "php_bin.json")
 console.log(php_json);
 const repo_published = JSON.parse(readFileSync(php_json, "utf8"))
 const jekins_url_base = "https://jenkins.pmmp.io/job/PHP-7.4-Aggregate"
-const JekinsJSON = JSON.parse(execSync(`curl -sS "${jekins_url_base}/lastSuccessfulBuild/api/json"`))
+const JSonCurl = execSync(`curl "${jekins_url_base}/lastSuccessfulBuild/api/json"`)
+console.log(JSonCurl)
+const JekinsJSON = JSON.parse(JSonCurl)
 if (JekinsJSON.displayName !== repo_published.release){
     exportVariable("upload", true)
     for (let index in JekinsJSON.artifacts){
