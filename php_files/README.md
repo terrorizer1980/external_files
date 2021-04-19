@@ -1,1 +1,0 @@
-# Output files drom CI/CD

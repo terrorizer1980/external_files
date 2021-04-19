@@ -1,0 +1,157 @@
+on: 
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: 0 0 * * */2
+
+name: PHP auto build
+jobs:
+  Linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+            ref: main
+
+      - name: Docker Copiler
+        run: |
+          cd PhpBinsDocker/
+          docker buildx build --tag sirherobrine23/phpbinbuild:latest --platform linux/amd64,linux/arm64 --file dockerfile .
+          docker manifest inspect --verbose sirherobrine23/phpbinbuild:latest > /tmp/ubuntuDoc
+          JsonID=0
+          while true
+          do
+            manifest="$(cat /tmp/ubuntuDoc | jq -r ".[${JsonID}].Descriptor.digest")"
+            if [ "${manifest}" == "null" ];then break;fi
+            echo "docker run --rm -v $PWD:/tmp/out sirherobrine23/phpbinbuild:latest@$JsonID"
+            echo "docker run --rm -v $PWD:/tmp/out sirherobrine23/phpbinbuild:latest@$JsonID" | bash
+            JsonID="$(($JsonID + 1))"
+          done
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Linux
+          path: PhpBinsDocker/*.zip
+          retention-days: 1
+
+  Windows:
+    runs-on: windows-latest
+    needs: [Linux]
+    steps:
+      - uses: actions/checkout@master
+        with:
+            ref: main
+
+      - name: PHP Copiler
+        run: |
+          cd PhpBinsDocker/
+          git clone https://github.com/pmmp/php-build-scripts.git php
+          cd php/
+          windows-compile-vs.bat
+          zip ../Windows_x64_php.zip -r bin/
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Windows
+          path: PhpBinsDocker/*.zip
+          retention-days: 1
+
+  MacOS:
+    runs-on: macos-latest
+    needs: [Windows]
+    steps:
+      - name: Setup Node JS
+        uses: actions/setup-node@v1
+        with:
+          node-version: 15.x
+
+      - uses: actions/checkout@master
+        with:
+            ref: main
+
+      - name: PHP Copiler
+        run: |
+          cd PhpBinsDocker/
+          git clone https://github.com/pmmp/php-build-scripts.git php/
+          cd php/
+          bash
+          zip ../MacOS_$(uname -m | sed 's|_|-|g')_php.zip -r bin/
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Macos
+          path: PhpBinsDocker/*.zip
+          retention-days: 1
+
+  Publish:
+    runs-on: ubuntu-latest
+    needs: [ Linux, Windows, MacOS ]
+    steps:
+      # Setup Node
+      - name: Setup Node JS
+        uses: actions/setup-node@v1
+        with:
+          node-version: 15.x
+
+      # Download Files
+      - name: Download Linux
+        uses: actions/download-artifact@v2
+        with:
+          name: Linux
+          path: /tmp/Bins
+
+      - name: Downlaod Windows
+        uses: actions/download-artifact@v2
+        with:
+          name: Windows
+          path: /tmp/Bins
+
+      - name: Downlaod MacOS
+        uses: actions/download-artifact@v2
+        with:
+          name: Macos
+          path: /tmp/Bins
+
+      # Prepare files
+      - name: Publish PHP files bin
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: PHP bins, ${{ github.run_id }}
+          tag_name: ${{ github.run_id }}
+          files: /tmp/Bins/*.zip
+          body: |
+            Windows users install the [Microsoft Visual C ++ 2017 Redistributable](https://aka.ms/vs/15/release/vc_redist.x64.exe)
+
+      - uses: actions/checkout@master
+        with:
+            ref: main
+
+      - name: Prepare JSon
+        run: |
+          cd workflows/
+          tag_name="${{ github.run_id }}" node php_get.js
+
+      - name: Create Pull Request
+        if: env.upload == 'true'
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Sever.json update
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: PHP_BIN_${{ github.run_id }}
+          delete-branch: true
+          base: main
+          title: 'php_bin.json update, check update in ${{ github.run_id }}'
+          body: |
+            Update report
+          labels: |
+            PHP_Update
+          team-reviewers: |
+            owners
+            maintainers
+          draft: false
