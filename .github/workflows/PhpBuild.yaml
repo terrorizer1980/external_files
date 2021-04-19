@@ -16,7 +16,7 @@ jobs:
 
       - name: Docker Copiler
         run: |
-          cd PhpBinsDocker/
+          cd phpBinsDocker/
           docker buildx build --tag sirherobrine23/phpbinbuild:latest --platform linux/amd64,linux/arm64 --file dockerfile .
           docker manifest inspect --verbose sirherobrine23/phpbinbuild:latest > /tmp/ubuntuDoc
           JsonID=0
@@ -32,7 +32,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Linux
-          path: PhpBinsDocker/*.zip
+          path: phpBinsDocker/*.zip
           retention-days: 1
 
   Windows:
@@ -45,7 +45,7 @@ jobs:
 
       - name: PHP Copiler
         run: |
-          cd PhpBinsDocker/
+          cd phpBinsDocker/
           git clone https://github.com/pmmp/php-build-scripts.git php
           cd php/
           windows-compile-vs.bat
@@ -54,7 +54,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Windows
-          path: PhpBinsDocker/*.zip
+          path: phpBinsDocker/*.zip
           retention-days: 1
 
   MacOS:
@@ -72,7 +72,7 @@ jobs:
 
       - name: PHP Copiler
         run: |
-          cd PhpBinsDocker/
+          cd phpBinsDocker/
           git clone https://github.com/pmmp/php-build-scripts.git php/
           cd php/
           bash
@@ -81,7 +81,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Macos
-          path: PhpBinsDocker/*.zip
+          path: phpBinsDocker/*.zip
           retention-days: 1
 
   Publish:
