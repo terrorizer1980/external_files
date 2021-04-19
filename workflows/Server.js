@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-"use stric"
 const {execSync} = require("child_process")
 const { readFileSync, writeFileSync } = require("fs")
 const { resolve } = require("path")
@@ -50,7 +49,7 @@ else {
     }
     console.log(new_Server.bedrock);
 }
-const url_java = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/" |grep "launcher"|awk '{print $2}'`).toString().replace("\n", "")
+const url_java = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/" |grep "server"|grep "launcher"|awk '{print $2}'`).toString().replace("\n", "")
 const java_version = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/"|grep "java -"|awk '{print $5}'`).toString().replace("\n", "").split("minecraft_server.").join("").split(".jar").join("")
 exportVariable("java_version", java_version)
 var exist_urls_java;

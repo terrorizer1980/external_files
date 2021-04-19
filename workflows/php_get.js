@@ -1,37 +1,22 @@
-const {execSync} = require("child_process")
-const { resolve } = require("path")
-const AdmZip = require("adm-zip");
-const { readFileSync, writeFileSync, mkdirSync } = require("fs");
+const { resolve } = require("path");
+const { readdirSync, writeFileSync } = require("fs");
 const {exportVariable} = require("@actions/core")
 const php_json = resolve(__dirname, "..", "php_bin.json")
-console.log(php_json);
-const repo_published = JSON.parse(readFileSync(php_json, "utf8"))
-const jekins_url_base = "https://jenkins.pmmp.io/job/PHP-7.4-Aggregate"
-const JSonCurl = execSync(`curl "${jekins_url_base}/lastSuccessfulBuild/api/json"`)
-console.log(JSonCurl)
-const JekinsJSON = JSON.parse(JSonCurl)
-if (JekinsJSON.displayName !== repo_published.release){
-    exportVariable("upload", true)
-    for (let index in JekinsJSON.artifacts){
-        let url_file = `${jekins_url_base}/lastSuccessfulBuild/artifact/${JekinsJSON.artifacts[index].relativePath}`
-        let file_name = JekinsJSON.artifacts[index].relativePath
-        repo_published.release = JekinsJSON.displayName
-        let ZIPFileName = file_name.split(".tar.gz").join(".zip")
-        let ZIPFilePath = resolve(__dirname, "..", "php_files", ZIPFileName)
-        let Path = resolve("/tmp", `php_bin_${Math.trunc(Math.random() * 10000000)}`)
-        if (file_name.includes("debug")) console.log(`Skip: ${ZIPFileName}`);
-        else {
-            let JSon_object = ZIPFileName.replaceAll(".zip", "").replaceAll("PHP-7.4-", "");
-            repo_published[JSon_object] = `https://github.com/The-Bds-Maneger/Raw_files/releases/download/${process.env.tag_name}/${ZIPFileName}`
-            if (file_name.includes(".zip")) execSync(`curl -sS "${url_file}" --output "${ZIPFilePath}"`)
-            else {
-                mkdirSync(Path)
-                execSync(`curl -sS "${url_file}" | tar xfz - -C "${Path}"`)
-                let zip = new AdmZip();
-                zip.addLocalFolder(Path);
-                zip.writeZip(ZIPFilePath);
-            }
-        }
-        writeFileSync(php_json, JSON.stringify(repo_published, null, 4))
-    }
-} else {console.log("Jupping pocketmine-PHP");exportVariable("upload", false)};
+
+exportVariable("upload", true)
+var files = readdirSync("/tmp/Bins/")
+var repo_published = {}
+    repo_published.linux = {}
+    repo_published.darwin = {}
+    repo_published.win32 = {}
+for (let index of files){
+    index = index.split("_")
+    console.log(index);
+    var System = ""
+    if (index[0].includes("Windows")) System = "win32"
+    else if (index[0].includes("Linux")) System = "linux"
+    else if (index[0].includes("MacOS", "macos")) System = "darwin"
+    else System = "other"
+    repo_published[System][index[1]] = `https://github.com/The-Bds-Maneger/Raw_files/releases/download/${process.env.tag_name}/${index.join("_")}`
+}
+writeFileSync(php_json, JSON.stringify(repo_published, null, 4))
