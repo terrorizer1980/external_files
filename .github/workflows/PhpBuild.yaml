@@ -49,6 +49,9 @@ jobs:
         with:
             ref: main
 
+      - name: Wget Install
+        run: curl https://eternallybored.org/misc/wget/1.21.1/64/wget.exe --output C:\Windows\system32
+
       - name: PHP Copiler
         run: |
           cd phpBinsDocker/
@@ -72,6 +75,9 @@ jobs:
         with:
           node-version: 15.x
 
+      - name: Install glibtool
+        run: brew install libtool
+
       - uses: actions/checkout@master
         with:
             ref: main
@@ -81,8 +87,8 @@ jobs:
           cd phpBinsDocker/
           git clone https://github.com/pmmp/php-build-scripts.git php/
           cd php/
-          bash
-          zip ../MacOS_$(uname -m | sed 's|_|-|g')_php.zip -r bin/
+          bash compile.sh -t mac -l -f
+          zip ../MacOS_$(uname -m | sed 's|86_||g')_php.zip -r bin/
 
       - uses: actions/upload-artifact@v2
         with:
