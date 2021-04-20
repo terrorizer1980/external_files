@@ -72,10 +72,12 @@ jobs:
           VS_EDITION: Enterprise
           SOURCES_PATH: ${{ github.workspace }}\pocketmine-php-sdk
         shell: cmd
+        run: windows-compile-vs.bat
+
+      - name: PHP Zip bin
         run: |
-          windows-compile-vs.bat
           dir
-          7z a ../Windows_x64_php.zip bin/
+          7z a Windows_x64_php.zip bin
 
       - name: Log
         run: type compile.log
@@ -83,7 +85,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Windows
-          path: phpBinsDocker/*.zip
+          path: "*.zip"
           retention-days: 1
 
   MacOS:
@@ -103,12 +105,12 @@ jobs:
           export PATH="/usr/local/opt/bison/bin:$PATH"
           set -ex
           . compile.sh -t mac64 -f -u -g -l
-          zip ../MacOS_$(uname -m | sed 's|86_||g')_php.zip -r bin/
+          zip MacOS_$(uname -m | sed 's|86_||g')_php.zip -r bin/
 
       - uses: actions/upload-artifact@v2
         with:
           name: Macos
-          path: phpBinsDocker/*.zip
+          path: MacOS_*.zip
           retention-days: 1
 
   Publish:
