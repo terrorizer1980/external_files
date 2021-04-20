@@ -50,9 +50,11 @@ jobs:
             ref: main
 
       - name: Wget Install
-        run: curl https://eternallybored.org/misc/wget/1.21.1/64/wget.exe --output C:\Windows\system32
+        run: choco install wget --no-progress
 
       - name: PHP Copiler
+        env:
+          VS_EDITION: Enterprise
         run: |
           cd phpBinsDocker/
           git clone https://github.com/pmmp/php-build-scripts.git php
@@ -75,8 +77,8 @@ jobs:
         with:
           node-version: 15.x
 
-      - name: Install glibtool
-        run: brew install libtool
+      - name: Install Depedencied
+        run: brew install libtool autoconf automake pkg-config bison re2c
 
       - uses: actions/checkout@master
         with:
@@ -84,10 +86,11 @@ jobs:
 
       - name: PHP Copiler
         run: |
+          export PATH="/usr/local/opt/bison/bin:$PATH"
           cd phpBinsDocker/
           git clone https://github.com/pmmp/php-build-scripts.git php/
           cd php/
-          bash compile.sh -t mac -l -f
+          ./compile.sh -t mac64 -j$(nproc) -f -u -g -l
           zip ../MacOS_$(uname -m | sed 's|86_||g')_php.zip -r bin/
 
       - uses: actions/upload-artifact@v2
