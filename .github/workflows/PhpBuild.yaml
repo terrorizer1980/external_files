@@ -73,7 +73,7 @@ jobs:
           git clone https://github.com/pmmp/php-build-scripts.git php
           cd php/
           pwd
-          Start-Process "cmd.exe"  "/c .\windows-compile-vs.bat"
+          .\windows-compile-vs.bat
           7z a ../Windows_x64_php.zip bin/
 
       - uses: actions/upload-artifact@v2
@@ -85,11 +85,6 @@ jobs:
   MacOS:
     runs-on: macos-latest
     steps:
-      - name: Setup Node JS
-        uses: actions/setup-node@v1
-        with:
-          node-version: 15.x
-
       - name: Install Depedencied
         run: brew install libtool autoconf automake pkg-config bison re2c
 
