@@ -161,6 +161,7 @@ jobs:
       - name: Prepare JSon
         run: |
           cd workflows/
+          npm install
           tag_name="${{ github.run_id }}" node php_get.js
 
       - name: Create Pull Request
