@@ -2,7 +2,7 @@
 set -ex
 git clone https://github.com/pmmp/php-build-scripts.git /tmp/php
 cd /tmp/php
-. compile.sh
+. compile.sh -j$(nproc)
 ls -la
 zip -q /tmp/out/Linux_$(uname -m | sed 's|_|-|g')_php.zip -r bin/
 

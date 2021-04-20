@@ -58,9 +58,11 @@ jobs:
   Windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@master
+      - name: clone pmmp/php-build-scripts
+        uses: actions/checkout@master
         with:
-            ref: main
+            ref: stable
+            repository: pmmp/php-build-scripts
 
       - name: Wget Install
         run: choco install wget --no-progress
@@ -68,13 +70,15 @@ jobs:
       - name: PHP Copiler
         env:
           VS_EDITION: Enterprise
+          SOURCES_PATH: ${{ github.workspace }}\pocketmine-php-sdk
+        shell: cmd
         run: |
-          cd phpBinsDocker/
-          git clone https://github.com/pmmp/php-build-scripts.git php
-          cd php/
-          pwd
-          .\windows-compile-vs.bat
+          windows-compile-vs.bat
+          dir
           7z a ../Windows_x64_php.zip bin/
+
+      - name: Log
+        run: type compile.log
 
       - uses: actions/upload-artifact@v2
         with:
@@ -88,17 +92,17 @@ jobs:
       - name: Install Depedencied
         run: brew install libtool autoconf automake pkg-config bison re2c
 
-      - uses: actions/checkout@master
+      - name: clone pmmp/php-build-scripts
+        uses: actions/checkout@master
         with:
-            ref: main
+            ref: stable
+            repository: pmmp/php-build-scripts
 
       - name: PHP Copiler
         run: |
           export PATH="/usr/local/opt/bison/bin:$PATH"
-          cd phpBinsDocker/
-          git clone https://github.com/pmmp/php-build-scripts.git php/
-          cd php/
-          bash compile.sh -t mac64 -f -u -g -l
+          set -ex
+          . compile.sh -t mac64 -f -u -g -l
           zip ../MacOS_$(uname -m | sed 's|86_||g')_php.zip -r bin/
 
       - uses: actions/upload-artifact@v2
