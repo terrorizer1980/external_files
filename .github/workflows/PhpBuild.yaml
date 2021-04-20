@@ -72,7 +72,8 @@ jobs:
           cd phpBinsDocker/
           git clone https://github.com/pmmp/php-build-scripts.git php
           cd php/
-          windows-compile-vs.bat
+          pwd
+          Start-Process "cmd.exe"  "/c .\windows-compile-vs.bat"
           zip ../Windows_x64_php.zip -r bin/
 
       - uses: actions/upload-artifact@v2
