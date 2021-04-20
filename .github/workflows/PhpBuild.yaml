@@ -26,6 +26,9 @@ jobs:
           username: ${{ secrets.DOCKER_ORG_USER }}
           password: ${{ secrets.DOCKER_ORG_PASS }}
 
+      - name: Pull
+        run: docker pull sirherobrine23/phpbinbuild:latest
+
       - name: Docker Copiler
         run: |
           cd phpBinsDocker/
@@ -40,8 +43,8 @@ jobs:
           do
             manifest="$(cat /tmp/ubuntuDoc | jq -r ".[${JsonID}].Descriptor.digest")"
             if [ "${manifest}" == "null" ];then break;fi
-            echo "docker run --rm -v $PWD:/tmp/out sirherobrine23/phpbinbuild:latest@$JsonID"
-            echo "docker run --rm -v $PWD:/tmp/out sirherobrine23/phpbinbuild:latest@$JsonID" | bash
+            echo "docker run --rm -v $PWD:/tmp/out sirherobrine23/phpbinbuild:latest@$manifest"
+            echo "docker run --rm -v $PWD:/tmp/out sirherobrine23/phpbinbuild:latest@$manifest" | bash
             JsonID="$(($JsonID + 1))"
           done
 
@@ -54,7 +57,6 @@ jobs:
 
   Windows:
     runs-on: windows-latest
-    needs: [Linux]
     steps:
       - uses: actions/checkout@master
         with:
@@ -81,7 +83,6 @@ jobs:
 
   MacOS:
     runs-on: macos-latest
-    needs: [Windows]
     steps:
       - name: Setup Node JS
         uses: actions/setup-node@v1

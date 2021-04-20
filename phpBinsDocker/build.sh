@@ -1,4 +1,10 @@
 #!/bin/bash
-#
-docker buildx create --append --use --name builder-0bebb35c-3c64-437a-84a5-5461f072efd8 ubuntu
-docker buildx build --tag sirherobrine23/phpbinbuild:latest --platform linux/amd64,linux/arm64 --file dockerfile .
+set -ex
+git clone https://github.com/pmmp/php-build-scripts.git /tmp/php
+cd /tmp/php
+. compile.sh
+ls -la
+zip -q /tmp/out/Linux_$(uname -m | sed 's|_|-|g')_php.zip -r bin/
+
+
+exit 0

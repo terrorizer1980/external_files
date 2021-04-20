@@ -4,16 +4,9 @@ ENV DEBIAN_FRONTEND="noninteractive"
 
 RUN \
 apt update && \
-apt install -y build-essential make wget gzip bzip2 bison git cmake re2c autoconf automake pkg-config libtool*
+apt install -y build-essential make wget gzip bzip2 bison git cmake re2c autoconf automake pkg-config libtool* unzip zip && \
+mkdir -p /tmp/out/
 
-RUN \
-cd /tmp ;\
-git clone https://github.com/pmmp/php-build-scripts.git php && \
-cd php ; \
-bash compile.sh && ls -la
-
-RUN \
-apt update && apt install -y unzip zip && mkdir -p /tmp/out/ && \
-echo "cd /tmp/php && zip /tmp/out/Linux_$(uname -m | sed 's|_|-|g')_php.zip -r bin/" > /entry.sh; chmod 7777 /entry.sh
-
-ENTRYPOINT [ "/entry.sh" ]
+COPY ./build.sh /entry.sh 
+RUN  chmod a+x /entry.sh
+ENTRYPOINT [ "bash /entry.sh" ]
