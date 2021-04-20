@@ -74,7 +74,7 @@ jobs:
           cd php/
           pwd
           Start-Process "cmd.exe"  "/c .\windows-compile-vs.bat"
-          zip ../Windows_x64_php.zip -r bin/
+          7z a ../Windows_x64_php.zip bin/
 
       - uses: actions/upload-artifact@v2
         with:
@@ -103,7 +103,7 @@ jobs:
           cd phpBinsDocker/
           git clone https://github.com/pmmp/php-build-scripts.git php/
           cd php/
-          ./compile.sh -t mac64 -j$(nproc) -f -u -g -l
+          bash compile.sh -t mac64 -f -u -g -l
           zip ../MacOS_$(uname -m | sed 's|86_||g')_php.zip -r bin/
 
       - uses: actions/upload-artifact@v2

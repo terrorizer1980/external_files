@@ -9,4 +9,4 @@ mkdir -p /tmp/out/
 
 COPY ./build.sh /entry.sh 
 RUN  chmod a+x /entry.sh
-ENTRYPOINT [ "bash /entry.sh" ]
+ENTRYPOINT [ "/entry.sh" ]
