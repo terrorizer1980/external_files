@@ -1,29 +1,16 @@
 #!/usr/bin/env node
-const {execSync} = require("child_process")
+const { execSync } = require("child_process")
 const { readFileSync, writeFileSync } = require("fs")
 const { resolve } = require("path")
-const {exportVariable} = require("@actions/core")
-const
-    Server_path = resolve(__dirname ,"..", "Server.json"),
-    old_Server_file = readFileSync(Server_path, "utf8");
-const new_Server = JSON.parse(old_Server_file)
-const url_linux = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-linux'| awk '/http/{print $2}'`).toString().replace("\n", ""),
-    url_win = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-win'| awk '/http/{print $2}'`).toString().replace("\n", ""),
-    pocketmine_json = JSON.parse(execSync(`curl -sS "https://api.github.com/repos/pmmp/PocketMine-MP/releases"`).toString())
+const { exportVariable } = require("@actions/core")
 
-new_Server.PocketMine_latest = pocketmine_json[0].tag_name
-exportVariable("pocketmine_version", pocketmine_json[0].tag_name)
-for (let index in pocketmine_json){
-    let TagPocketMine = pocketmine_json[index].tag_name
-    if (old_Server_file.includes(TagPocketMine)) console.log(`Tag name exist: ${TagPocketMine}`);
-    else {
-        let data = new Date(pocketmine_json[index].published_at)
-        new_Server.PocketMine[TagPocketMine] = {
-            url: `https://github.com/pmmp/PocketMine-MP/releases/download/${TagPocketMine}/PocketMine-MP.phar`,
-            data: `${data.getFullYear()}/${data.getMonth() +1}/${data.getDate()}`
-        }
-    }
-}
+const Server_path = resolve(__dirname, "..", "Server.json");
+const old_Server_file = readFileSync(Server_path, "utf8");
+const new_Server = JSON.parse(old_Server_file)
+
+const url_linux = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-linux'| awk '/http/{print $2}'`).toString().replace("\n", "")
+const url_win = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-win'| awk '/http/{print $2}'`).toString().replace("\n", "")
+const pocketmine_json = JSON.parse(execSync(`curl -sS "https://api.github.com/repos/pmmp/PocketMine-MP/releases"`).toString())
 
 const server_version = url_win.split("-")[3].toString().replaceAll(".zip", "")
 exportVariable("bedrock_version", server_version)
@@ -43,9 +30,11 @@ else {
     new_Server.bedrock_latest = server_version
     let data = new Date()
     new_Server.bedrock[server_version] = {
-        url_linux: url_linux,
-        url_windows: url_win,
-        data: `${data.getFullYear()}/${data.getMonth() +1}/${data.getDate()}`
+        "x64": {
+            "linux": url_linux,
+            "win32": url_win
+        },
+        "data": `${data.getFullYear()}/${data.getMonth() +1}/${data.getDate()}`
     }
     console.log(new_Server.bedrock);
 }
@@ -68,4 +57,17 @@ else {
     }
     console.log(new_Server.java[java_version]);
 }
+
+new_Server.PocketMine_latest = pocketmine_json[0].tag_name
+exportVariable("pocketmine_version", pocketmine_json[0].tag_name)
+for (let index of pocketmine_json){
+    if (!(old_Server_file.includes(index.tag_name))) {
+        let data = new Date(index.published_at)
+        new_Server.PocketMine[index.tag_name] = {
+            url: `https://github.com/pmmp/PocketMine-MP/releases/download/${index.tag_name}/PocketMine-MP.phar`,
+            data: `${data.getFullYear()}/${data.getMonth() +1}/${data.getDate()}`
+        }
+    }
+}
+
 writeFileSync(Server_path, JSON.stringify(new_Server, null, 4))
