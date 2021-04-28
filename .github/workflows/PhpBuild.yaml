@@ -1,13 +1,15 @@
 on:
   schedule:
     - cron: 0 0 * * */5
+  watch:
+    type: [started]
 
-name: PHP auto build
+name: php bin auto build
 jobs:
   Linux:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@main
         with:
             ref: main
 
@@ -56,7 +58,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: clone pmmp/php-build-scripts
-        uses: actions/checkout@master
+        uses: actions/checkout@main
         with:
             ref: stable
             repository: pmmp/php-build-scripts
@@ -92,7 +94,7 @@ jobs:
         run: brew install libtool autoconf automake pkg-config bison re2c
 
       - name: clone pmmp/php-build-scripts
-        uses: actions/checkout@master
+        uses: actions/checkout@main
         with:
             ref: stable
             repository: pmmp/php-build-scripts
@@ -151,34 +153,22 @@ jobs:
           body: |
             Windows users install the [Microsoft Visual C ++ 2017 Redistributable](https://aka.ms/vs/15/release/vc_redist.x64.exe)
 
-      - uses: actions/checkout@master
+      - uses: actions/checkout@main
         with:
             ref: main
 
-      - name: Prepare JSon
+      - name: Prepare Json
         run: |
           cd workflows/
           npm install
           tag_name="${{ github.run_id }}" node php_get.js
 
-      - name: Create Pull Request
-        if: env.upload == 'true'
-        uses: peter-evans/create-pull-request@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Sever.json update
-          committer: GitHub <noreply@github.com>
-          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-          signoff: false
-          branch: PHP_BIN_${{ github.run_id }}
-          delete-branch: true
-          base: main
-          title: 'php_bin.json update, check update in ${{ github.run_id }}'
-          body: |
-            Update report
-          labels: |
-            PHP_Update
-          team-reviewers: |
-            owners
-            maintainers
-          draft: false
+      - name: Publish php_bin.json
+        run: |
+          set -ex
+          git config --global user.email 'github-actions@github.com'
+          git config --global user.name 'github-actions[bot]'
+          git config --global http.postBuffer 157286400 sslVerify=false
+          git add ./php_bin.json
+          git commit -m "Publish PHP bins Json" -m "Run id: ${{ github.run_id }}"
+          git push
