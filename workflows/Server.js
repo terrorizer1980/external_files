@@ -28,6 +28,7 @@ if (old_Server_file.includes(url_linux) && old_Server_file.includes(url_win)){
         else if (lib[0].includes("/")) arrayLibs.push(lib[0])
         else console.log(lib);
     }
+    arrayLibs.push("/lib/x86_64-linux-gnu/ld-2.31.so")
     for (let addInzip of arrayLibs) {
         var dir = addInzip.split("/");dir.pop(dir.length - 1);dir = dir.join("/");
         Zip.addLocalFile(addInzip, dir);
