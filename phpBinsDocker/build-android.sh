@@ -3,7 +3,9 @@ set -ex
 #
 git clone https://github.com/pmmp/musl-cross-make.git /tmp/musl-cross-make 
 cd /tmp/musl-cross-make
-mv config.mak.dist config.mak
+echo "TARGET = aarch64-linux-musl
+OUTPUT = /usr/local" > config.mak
+make
 make install -j$(nproc)
 #
 git clone https://github.com/pmmp/php-build-scripts.git /tmp/php-build-scripts
