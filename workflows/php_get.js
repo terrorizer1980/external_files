@@ -15,7 +15,7 @@ var repo_published = {
 for (let index of files){
     index = index.split("86-").join("").split("x86_64").join("x64").split("_")
     var System = ""
-    if (/indows/.tes(index[0])) System = "win32"
+    if (/indows/.test(index[0])) System = "win32"
     else if (/inux/.test(index[0])) System = "linux"
     else if (/Android/.test(index[0])) System = "android"
     else if (/MacOS/.test(index[0]) || /macos/.test(index[0])) System = "darwin"
