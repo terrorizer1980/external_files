@@ -9,14 +9,16 @@ var repo_published = {
     "linux": {},
     "darwin": {},
     "win32": {},
+    "android": {},
     "other": {}
 };
 for (let index of files){
     index = index.split("86-").join("").split("x86_64").join("x64").split("_")
     var System = ""
-    if (index[0].includes("Windows")) System = "win32"
-    else if (index[0].includes("Linux")) System = "linux"
-    else if (index[0].includes("MacOS", "macos")) System = "darwin"
+    if (/indows/.tes(index[0])) System = "win32"
+    else if (/inux/.test(index[0])) System = "linux"
+    else if (/Android/.test(index[0])) System = "android"
+    else if (/MacOS/.test(index[0]) || /macos/.test(index[0])) System = "darwin"
     else {
         System = "other";
         index = [null, index.join("_")]

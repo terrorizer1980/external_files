@@ -1,6 +1,6 @@
 on:
   schedule:
-    - cron: 0 0 * * */5
+    - cron: 0 0 * * */6
   watch:
     type: [started]
 
@@ -28,12 +28,12 @@ jobs:
       - name: Pull
         run: docker pull sirherobrine23/phpbinbuild:latest
 
-      - name: Docker Copiler
+      - name: Create Docker image to amd64, aarch64, and Android aarch64
         run: |
           cd phpBinsDocker/
-          docker buildx build --tag sirherobrine23/phpbinbuild:latest --push --platform linux/amd64,linux/arm64 --file dockerfile .
+          docker buildx build --tag sirherobrine23/phpbinbuild:latest --push --target=amd64-php --platform linux/amd64,linux/arm64 --file dockerfile .
 
-      - name: Docker get Zip
+      - name: Copiler php linux amd64, and linux aarch64
         run: |
           cd phpBinsDocker/
           docker manifest inspect --verbose sirherobrine23/phpbinbuild:latest > /tmp/ubuntuDoc
@@ -47,10 +47,48 @@ jobs:
             JsonID="$(($JsonID + 1))"
           done
 
-
       - uses: actions/upload-artifact@v2
         with:
           name: Linux
+          path: phpBinsDocker/*.zip
+          retention-days: 1
+
+  Android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+        with:
+            ref: main
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKER_ORG_USER }}
+          password: ${{ secrets.DOCKER_ORG_PASS }}
+
+      - name: Pull
+        run: docker pull sirherobrine23/phpbinbuild:latest
+
+      - name: Create Docker image to amd64, aarch64, and Android aarch64
+        run: |
+          cd phpBinsDocker/
+          docker buildx build --tag sirherobrine23/phpbinbuild:android --push --target=android --platform linux/amd64,linux/arm64 --file dockerfile .
+
+      - name: Copiler php android aarch64
+        run: |
+          cd phpBinsDocker/
+          echo "docker run --rm -v $PWD:/tmp/out sirherobrine23/phpbinbuild:android"
+          echo "docker run --rm -v $PWD:/tmp/out sirherobrine23/phpbinbuild:android" | bash
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Android
           path: phpBinsDocker/*.zip
           retention-days: 1
 
@@ -127,6 +165,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: Linux
+          path: /tmp/Bins
+
+      - name: Download Android
+        uses: actions/download-artifact@v2
+        with:
+          name: Android
           path: /tmp/Bins
 
       - name: Downlaod Windows
