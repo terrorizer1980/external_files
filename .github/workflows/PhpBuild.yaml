@@ -100,6 +100,10 @@ jobs:
         with:
             ref: stable
             repository: pmmp/php-build-scripts
+      - name: clone ${{ github.ref }}
+        uses: actions/checkout@main
+        with:
+          path: ../rawBds
 
       - name: Wget Install
         run: choco install wget --no-progress
@@ -115,6 +119,7 @@ jobs:
         run: |
           dir
           7z a Windows_x64_php.zip bin
+          node ../rawBds/phpBinsDocker/windowsRename.js
 
       - name: Log
         run: type compile.log
@@ -122,7 +127,9 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Windows
-          path: "*.zip"
+          path: |
+            *.zip
+            !*debug*.zip
           retention-days: 1
 
   MacOS:
@@ -161,28 +168,9 @@ jobs:
           node-version: 15.x
 
       # Download Files
-      - name: Download Linux
+      - name: Download Bins
         uses: actions/download-artifact@v2
         with:
-          name: Linux
-          path: /tmp/Bins
-
-      - name: Download Android
-        uses: actions/download-artifact@v2
-        with:
-          name: Android
-          path: /tmp/Bins
-
-      - name: Downlaod Windows
-        uses: actions/download-artifact@v2
-        with:
-          name: Windows
-          path: /tmp/Bins
-
-      - name: Downlaod MacOS
-        uses: actions/download-artifact@v2
-        with:
-          name: Macos
           path: /tmp/Bins
 
       # Prepare files
