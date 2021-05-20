@@ -181,7 +181,9 @@ jobs:
         with:
           name: PHP bins, ${{ github.run_id }}
           tag_name: ${{ github.run_id }}
-          files: /tmp/Bins/*.zip
+          files: |
+            /tmp/Bins/*/*.zip
+            /tmp/Bins/*.zip
           body: |
             Windows users install the [Microsoft Visual C ++ 2017 Redistributable](https://aka.ms/vs/15/release/vc_redist.x64.exe)
 

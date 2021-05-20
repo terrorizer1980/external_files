@@ -2,8 +2,8 @@ const { resolve, join } = require("path")
 const { readdirSync, renameSync } = require("fs");
 const { homedir } = require("os");
 
-// const _a = process.cwd()
-const _a = join(homedir(), "Downloads")
+const _a = process.cwd()
+// const _a = join(homedir(), "Downloads")
 console.log(_a);
 const fileFolder = readdirSync(_a).filter(data => {return /.zip/gi.test(data)}).filter(data => {return /vc[0-9]/gi.test(data)})
 for (let rename of fileFolder) {
