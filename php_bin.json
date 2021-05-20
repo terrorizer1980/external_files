@@ -1,15 +1,15 @@
 {
     "linux": {
-        "undefined": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/858957198/Linux"
+        "undefined": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/860396673/Linux"
     },
     "darwin": {},
     "win32": {
-        "undefined": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/858957198/Windows"
+        "undefined": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/860396673/Windows"
     },
     "android": {
-        "undefined": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/858957198/Android"
+        "undefined": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/860396673/Android"
     },
     "other": {
-        "Macos": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/858957198/_Macos"
+        "Macos": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/860396673/_Macos"
     }
 }
