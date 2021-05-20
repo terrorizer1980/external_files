@@ -103,7 +103,7 @@ jobs:
       - name: clone ${{ github.ref }}
         uses: actions/checkout@main
         with:
-          path: ../rawBds
+          path: rawBds
 
       - name: Wget Install
         run: choco install wget --no-progress
@@ -119,7 +119,7 @@ jobs:
         run: |
           dir
           7z a Windows_x64_php.zip bin
-          node ../rawBds/phpBinsDocker/windowsRename.js
+          node rawBds/phpBinsDocker/windowsRename.js
 
       - name: Log
         run: type compile.log
