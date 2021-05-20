@@ -37,7 +37,10 @@ jobs:
       - name: Commit Modifications
         continue-on-error: true
         run: |
-          git add .
+          git config --global user.email 'github-actions@github.com'
+          git config --global user.name 'github-actions[bot]'
+          git config --global http.postBuffer 157286400 sslVerify=false
+          git add ./Server.json
           git commit -m "Update Server.json" -m "- bedrock Version: ${{ env.bedrock_version }}" -m "- java Version: ${{ env.java_version }}" -m "- PocketMine Version: ${{ env.pocketmine_version }}"
           git push
       # - name: Create Pull Request

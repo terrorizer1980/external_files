@@ -1,19 +1,15 @@
 {
     "linux": {
-        "aarch64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/846011267/Linux_aarch64_php.zip",
-        "x64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/846011267/Linux_x64_php.zip"
+        "undefined": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/858957198/Linux"
     },
-    "darwin": {
-        "x64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/846011267/MacOS_x64_php.zip"
-    },
+    "darwin": {},
     "win32": {
-        "x64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/846011267/Windows_x64_php.zip"
+        "undefined": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/858957198/Windows"
     },
     "android": {
-        "aarch64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/846011267/Android_aarch64_php.zip"
+        "undefined": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/858957198/Android"
     },
     "other": {
-        "php-7.4.18-vc15-x64.zip": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/846011267/_php-7.4.18-vc15-x64.zip",
-        "php-debug-pack-7.4.18-Win32-vc15-x64.zip": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/846011267/_php-debug-pack-7.4.18-Win32-vc15-x64.zip"
+        "Macos": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/858957198/_Macos"
     }
 }
