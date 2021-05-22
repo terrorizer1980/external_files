@@ -8,8 +8,8 @@ const Server_path = resolve(__dirname, "..", "Server.json");
 const old_Server_file = readFileSync(Server_path, "utf8");
 const new_Server = JSON.parse(old_Server_file)
 
-const url_linux = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-linux'| awk '{print $2}'`).toString().replace("\n", "")
-const url_win = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/bedrock" |grep 'bin-win'| awk '{print $2}'`).toString().replace("\n", "")
+const url_linux = execSync(`curl -sS "https://www.minecraft.net/en-us/download/server/bedrock" | lynx -dump -stdin |grep 'bin-linux'| awk '{print $2}'`).toString().replace("\n", "")
+const url_win = execSync(`curl -sS "https://www.minecraft.net/en-us/download/server/bedrock" | lynx -dump -stdin |grep 'bin-win'| awk '{print $2}'`).toString().replace("\n", "")
 const winSplit = url_win.split("/");
 const server_version = winSplit[(winSplit.length - 1)].replace("bedrock-server-", "").replaceAll(".zip", "")
 exportVariable("bedrock_version", server_version)
@@ -45,7 +45,7 @@ if (old_Server_file.includes(url_linux) && old_Server_file.includes(url_win)){
     }
     console.log(new_Server.bedrock[server_version]);
 }
-var java_version = execSync(`lynx -dump "https://www.minecraft.net/en-us/download/server/" | grep "java"`).toString().split(/\r?\n/g)[1].trim().split(/\s+/g).filter((data) => {if (data === "java" || data === "-jar" || data === "nogui" || data.includes("-Xm")) return false;else return true;});
+var java_version = execSync(`curl"https://www.minecraft.net/en-us/download/server/" | lynx -dump -stdin | grep "java"`).toString().split(/\r?\n/g)[1].trim().split(/\s+/g).filter((data) => {if (data === "java" || data === "-jar" || data === "nogui" || data.includes("-Xm")) return false;else return true;});
 java_version = java_version[(java_version.length - 1)].replace("minecraft_server.", "").replace(".jar", "")
 exportVariable("java_version", java_version)
 if (new_Server.java[java_version] !== undefined){
