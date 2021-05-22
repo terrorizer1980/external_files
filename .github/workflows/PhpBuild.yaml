@@ -171,8 +171,10 @@ jobs:
       - name: Download Bins
         uses: actions/download-artifact@v2
         with:
-          path: /tmp/Bins
-      - run: mv -v /tmp/Bins/*/*.zip /tmp/Bins/
+          path: /tmp/TMPBins
+      - run: |
+          mkdir -p /tmp/Bins/
+          mv -v /tmp/TMPBins/*/*.zip /tmp/Bins/
 
       # Prepare files
       - name: Publish PHP files bin
