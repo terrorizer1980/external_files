@@ -178,8 +178,8 @@ jobs:
       - uses: dev-drprasad/delete-older-releases@v0.2.0
         with:
           delete_tag_pattern: PHP bins
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Prepare files
       - name: Publish PHP files bin
         uses: softprops/action-gh-release@v1
