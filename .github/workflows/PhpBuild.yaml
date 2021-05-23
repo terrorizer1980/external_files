@@ -177,7 +177,7 @@ jobs:
           mv -v /tmp/TMPBins/*/*.zip /tmp/Bins/
 
       - name: Remove old Releases
-        uses: dev-drprasad/delete-older-releases@v0.1.0
+        uses: dev-drprasad/delete-older-releases@master
         with:
           keep_latest: 1
           delete_tags: true
