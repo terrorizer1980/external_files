@@ -2,6 +2,11 @@
     "java_latest": "1.16.5",
     "bedrock_latest": "1.16.221.01",
     "PocketMine_latest": "3.19.2",
+    "latest": {
+        "java": "1.16.5",
+        "bedrock": "1.16.221.01",
+        "pocketmine": "3.19.2"
+    },
     "java": {
         "1.16.5": {
             "url": "https://launcher.mojang.com/v1/objects/1b557e7b033b583cd9f66746b7a9ab1ec1673ced/server.jar",

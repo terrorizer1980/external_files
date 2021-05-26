@@ -4,7 +4,11 @@ git clone https://github.com/pmmp/php-build-scripts.git /tmp/php
 cd /tmp/php
 . compile.sh -j$(nproc)
 ls -la
-zip -q /tmp/out/Linux_$(uname -m | sed 's|x86_64|x64|g')_php.zip -r bin/
 
+case $(uname -m) in
+    x86_64) ARCH="x64";;
+    *) ARCH="$(uname -m)";;
+esac
 
+zip -q /tmp/out/Linux_${ARCH}_php.zip -r bin/
 exit 0

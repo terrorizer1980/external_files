@@ -1,7 +1,7 @@
 const { resolve, join } = require("path");
-const { readdirSync, writeFileSync } = require("fs");
+const { readdirSync, writeFileSync, lstatSync } = require("fs");
 const {exportVariable} = require("@actions/core")
-const php_json = resolve(__dirname, "..", "php_bin.json")
+const php_json = resolve(__dirname, "../..", "php_bin.json")
 
 exportVariable("upload", true)
 var files = readdirSync("/tmp/Bins/")
@@ -13,12 +13,12 @@ var repo_published = {
     "other": {}
 };
 for (let index of files){
-    index = index.split("86-").join("").split("x86_64").join("x64").split("_")
+    index = index.split(/[Xx]86[-_]64/gi).join("x64").split(/arm64/gi).join("aarch64").split("_")
     var System = ""
-    if (/indows/.test(index[0])) System = "win32"
-    else if (/inux/.test(index[0])) System = "linux"
-    else if (/Android/.test(index[0])) System = "android"
-    else if (/MacOS/.test(index[0]) || /macos/.test(index[0])) System = "darwin"
+    if (/[wW]indows/.test(index[0])) System = "win32"
+    else if (/[lL]inux/.test(index[0])) System = "linux"
+    else if (/[aA]ndroid/.test(index[0])) System = "android"
+    else if (/[mM]ac[oO][sS]/.test(index[0])) System = "darwin"
     else {
         System = "other";
         index = [null, index.join("_")]

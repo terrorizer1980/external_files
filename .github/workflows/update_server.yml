@@ -19,9 +19,9 @@ jobs:
           ref: main
       - name: Install lynx and Check Versions
         run: |
-          sudo bash -c "apt update && apt install -y lynx wget curl"
-          cd workflows/
-          npm install --no-save
+          sudo bash -c "apt update && apt install -y lynx wget curl" > /dev/null
+          cd Builds/workflows/
+          npm install --no-save > /dev/null
           node ./Server.js
 
       - name: Commit Modifications

@@ -30,12 +30,12 @@ jobs:
 
       - name: Create Docker image to amd64, aarch64, and Android aarch64
         run: |
-          cd phpBinsDocker/
+          cd Builds/phpBinsDocker/
           docker buildx build --tag sirherobrine23/phpbinbuild:latest --push --target=amd64-php --platform linux/amd64,linux/arm64 --file dockerfile .
 
       - name: Copiler php linux amd64, and linux aarch64
         run: |
-          cd phpBinsDocker/
+          cd Builds/phpBinsDocker/
           docker manifest inspect --verbose sirherobrine23/phpbinbuild:latest > /tmp/ubuntuDoc
           JsonID=0
           while true
@@ -50,7 +50,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Linux
-          path: phpBinsDocker/*.zip
+          path: Builds/phpBinsDocker/*.zip
           retention-days: 1
 
   Android:
@@ -77,19 +77,19 @@ jobs:
 
       - name: Create Docker image to amd64, aarch64, and Android aarch64
         run: |
-          cd phpBinsDocker/
+          cd Builds/phpBinsDocker/
           docker buildx build --tag sirherobrine23/phpbinbuild:android --push --target=android --platform linux/amd64,linux/arm64 --file dockerfile .
 
       - name: Copiler php android aarch64
         run: |
-          cd phpBinsDocker/
+          cd Builds/phpBinsDocker/
           echo "docker run --rm -v $PWD:/tmp/out sirherobrine23/phpbinbuild:android"
           echo "docker run --rm -v $PWD:/tmp/out sirherobrine23/phpbinbuild:android" | bash
 
       - uses: actions/upload-artifact@v2
         with:
           name: Android
-          path: phpBinsDocker/*.zip
+          path: Builds/phpBinsDocker/*.zip
           retention-days: 1
 
   Windows:
@@ -119,7 +119,7 @@ jobs:
         run: |
           dir
           7z a Windows_x64_php.zip bin
-          node rawBds/phpBinsDocker/windowsRename.js
+          node rawBds/Builds/phpBinsDocker/windowsRename.js
 
       - name: Log
         run: type compile.log
