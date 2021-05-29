@@ -181,7 +181,7 @@ jobs:
         with:
           keep_latest: 1
           delete_tags: true
-          delete_tag_pattern: PHP bins
+          delete_tag_pattern: PHP bin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -191,7 +191,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: PHP bins, ${{ github.run_id }}
+          name: PHP bin
           tag_name: ${{ github.run_id }}
           files: |
             /tmp/Bins/*.zip
@@ -204,7 +204,7 @@ jobs:
 
       - name: Prepare Json
         run: |
-          cd workflows/
+          cd Builds/workflows/
           npm install
           tag_name="${{ github.run_id }}" node php_get.js
 
