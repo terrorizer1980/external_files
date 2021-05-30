@@ -1,16 +1,16 @@
 {
     "linux": {
-        "aarch64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/888061818/Linux_aarch64_php.zip",
-        "x64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/888061818/Linux_x64_php.zip"
+        "aarch64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/889355832/Linux_aarch64_php.zip",
+        "x64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/889355832/Linux_x64_php.zip"
     },
     "darwin": {
-        "x64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/888061818/MacOS_x64_php.zip"
+        "x64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/889355832/MacOS_x64_php.zip"
     },
     "win32": {
-        "x64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/888061818/Windows_x64_php_redist.zip"
+        "x64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/889355832/Windows_x64_php_redist.zip"
     },
     "android": {
-        "aarch64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/888061818/Android_aarch64_php.zip"
+        "aarch64": "https://github.com/The-Bds-Maneger/Raw_files/releases/download/889355832/Android_aarch64_php.zip"
     },
     "other": {}
 }
