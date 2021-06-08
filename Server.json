@@ -8,6 +8,10 @@
         "pocketmine": "3.19.2"
     },
     "java": {
+        "1.17": {
+            "url": "https://launcher.mojang.com/v1/objects/0a269b5f2c5b93b1712d0f5dc43b6182b9ab254e/server.jar",
+            "data": "2021/6/8"
+        },
         "1.16.5": {
             "url": "https://launcher.mojang.com/v1/objects/1b557e7b033b583cd9f66746b7a9ab1ec1673ced/server.jar",
             "data": "2021/01/14"
@@ -254,6 +258,13 @@
         }
     },
     "bedrock": {
+        "1.17.0.03": {
+            "x64": {
+                "linux": "https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.0.03.zip",
+                "win32": "https://minecraft.azureedge.net/bin-win/bedrock-server-1.17.0.03.zip"
+            },
+            "data": "2021/6/8"
+        },
         "1.16.220.02": {
             "x64": {
                 "linux": "https://minecraft.azureedge.net/bin-linux/bedrock-server-1.16.220.02.zip",
@@ -501,6 +512,10 @@
         }
     },
     "PocketMine": {
+        "3.19.3": {
+            "url": "https://github.com/pmmp/PocketMine-MP/releases/download/3.19.3/PocketMine-MP.phar",
+            "data": "2021/6/8"
+        },
         "3.19.1": {
             "url": "https://github.com/pmmp/PocketMine-MP/releases/download/3.19.1/PocketMine-MP.phar",
             "data": "2021/4/25"
