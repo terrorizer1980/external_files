@@ -4,7 +4,7 @@ const { readFileSync, writeFileSync } = require("fs")
 const { resolve } = require("path")
 const { exportVariable } = require("@actions/core")
 
-const Server_path = resolve(__dirname, "../..", "Server.json");
+const Server_path = resolve(__dirname, "../../Server.json");
 const old_Server_file = readFileSync(Server_path, "utf8");
 const oldServer = JSON.parse(old_Server_file)
 const new_Server = {
@@ -47,8 +47,9 @@ function createZipLibries(){
     return Zip.writeZip(resolve(__dirname, "../..", "linux_libries.zip"));
 }
 
-if (oldServer.bedrock[BedrockServerVersion]) console.log("the bedrock platform is up to date, jumping"); else {
-    new_Server.bedrock_latest = BedrockServerVersion
+new_Server.latest.bedrock = new_Server.bedrock_latest = BedrockServerVersion
+if (oldServer.bedrock[BedrockServerVersion]) console.log("the bedrock platform is up to date, jumping");
+else {
     let data = new Date()
     new_Server.bedrock[BedrockServerVersion] = {
         x64: {
@@ -62,20 +63,24 @@ if (oldServer.bedrock[BedrockServerVersion]) console.log("the bedrock platform i
 }
 
 // Java
-var java_version = javaLynx.filter(data => {return data.includes("java")}).filter(data => {return data.includes("-jar")})[0].trim().split(/\s+/g).filter((data) => {return !(data === "java" || data === "-jar" || data === "nogui" || data.includes("-Xm"))})[0].trim().split(/minecraft_server/).join("").split(/\.jar/).join("")
-if (java_version.startsWith(".")) java_version = java_version.replace(".", "")
+const JavaServerVersion = (function(){
+    var Version = javaLynx.filter(data => {return data.includes("java")}).filter(data => {return data.includes("-jar")})[0].trim().split(/\s+/g).filter((data) => {return !(data === "java" || data === "-jar" || data === "nogui" || data.includes("-Xm"))})[0].trim().split(/minecraft_server/).join("").split(/\.jar/).join("")
+    if (Version.startsWith(".")) Version = Version.replace(".", "")
+    return Version
+})()
 
-if (oldServer.java[java_version]) console.log("the java platform is up to date, jumping"); else {
-    new_Server.java_latest = java_version
+new_Server.latest.java = new_Server.java_latest = JavaServerVersion
+if (oldServer.java[JavaServerVersion]) console.log("the java platform is up to date, jumping");
+else {
     let data = new Date()
-    new_Server.java[java_version] = {
+    new_Server.java[JavaServerVersion] = {
         url: javaLynx.filter(data => {return data.includes("server.jar")})[0].split(/\s+/g).filter(data => {return data.includes("http")})[0],
         data: `${data.getFullYear()}/${data.getMonth() +1}/${data.getDate()}`
     }
-    console.log(new_Server.java[java_version]);
+    console.log(new_Server.java[JavaServerVersion]);
 }
 
-new_Server.PocketMine_latest = pocketmine_json[0].tag_name
+new_Server.latest.pocketmine = new_Server.PocketMine_latest = pocketmine_json[0].tag_name
 for (let index of pocketmine_json){
     if (!(old_Server_file.includes(index.tag_name))) {
         let data = new Date(index.published_at)
@@ -86,11 +91,6 @@ for (let index of pocketmine_json){
         console.log(new_Server.PocketMine[index.tag_name]);
     }
 }
-
-// Latest check
-if (new_Server.latest.java === null) new_Server.latest.java = new_Server.java_latest = oldServer.java_latest
-if (new_Server.latest.bedrock === null) new_Server.latest.bedrock = new_Server.bedrock_latest = oldServer.bedrock_latest
-if (new_Server.latest.pocketmine === null) new_Server.latest.pocketmine = new_Server.PocketMine_latest = oldServer.PocketMine_latest
 
 // Add Old in new
 for (let java of Object.getOwnPropertyNames(oldServer.java)){new_Server.java[java] = oldServer.java[java]}
