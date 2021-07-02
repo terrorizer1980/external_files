@@ -58,7 +58,6 @@ else {
         },
         data: `${data.getFullYear()}/${data.getMonth() +1}/${data.getDate()}`
     }
-    createZipLibries()
     console.log(new_Server.bedrock[BedrockServerVersion]);
 }
 
