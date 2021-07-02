@@ -31,6 +31,8 @@ const winSplit = url_win.split("/");
 const BedrockServerVersion = winSplit[(winSplit.length - 1)].replace("bedrock-server-", "").replaceAll(".zip", "")
 console.log(`Windows Bedrock URL: ${url_win}\nLinux Bedrock URL: ${url_linux}\n\nVersion: ${BedrockServerVersion}\n`)
 
+console.log(url_linux, url_win)
+
 // Bedrock
 function createZipLibries(){
     execSync(`wget "${url_linux}" -O bedrock.zip && unzip -o bedrock.zip -d ./`, {cwd: "/tmp"});
