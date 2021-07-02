@@ -21,11 +21,11 @@ const new_Server = {
     PocketMine: {}
 }
 
-const javaLynx = execSync(`curl -sS "https://www.minecraft.net/en-us/download/server" | lynx -dump -stdin`).toString().split(/\n/g);
+const javaLynx = execSync(`wget -qO- --user-agent="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"  "https://www.minecraft.net/en-us/download/server" | lynx -dump -stdin`).toString().split(/\n/g);
 const pocketmine_json = JSON.parse(execSync(`curl -sS "https://api.github.com/repos/pmmp/PocketMine-MP/releases"`).toString());
 var url_linux, url_win
 for (let urls of execSync(`curl -sS "https://www.minecraft.net/en-us/download/server/bedrock" | lynx -dump -stdin`).toString().split(/\n/gi).filter(data => {return (data.includes("bin-"))})){
-    for (let _i of urls.split(/\s+/g)) {console.log(_i);if (_i.includes("http")) {if (_i.includes("bin-win")) url_win = _i; else if (_i.includes("bin-linux")) url_linux = _i;};}
+    for (let _i of urls.split(/\s+/g)) {if (_i.includes("http")) {if (_i.includes("bin-win")) url_win = _i; else if (_i.includes("bin-linux")) url_linux = _i;};}
 }
 const winSplit = url_win.split("/");
 const BedrockServerVersion = winSplit[(winSplit.length - 1)].replace("bedrock-server-", "").replaceAll(".zip", "")
