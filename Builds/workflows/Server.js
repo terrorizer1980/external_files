@@ -21,14 +21,27 @@ const new_Server = {
     PocketMine: {}
 }
 
-const javaLynx = execSync(`wget -qO- --user-agent="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36" "https://www.minecraft.net/en-us/download/server"`).toString().split(/["'?/hi).filter(d=>/http[s]/.test(d)).join("\n")
+function wget(url = "https://google.com"){
+    const command = (`curl -H "user-agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36" "${url}"`)
+    console.log(command)
+    const _a = execSync(command).toString().split(/["']/gi).filter(d=>/http[s]:/.test(d))
+    return _a
+}
+function lynx(url = "https://google.com"){
+    const command = (`curl -H "user-agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36" "${url}" | lynx -dump -stdin`)
+    console.log(command)
+    const _a = execSync(command).toString()
+    return _a
+}
+
+const javaLynx = lynx("https://www.minecraft.net/en-us/download/server").split("\n")
 const pocketmine_json = JSON.parse(execSync(`curl -sS "https://api.github.com/repos/pmmp/PocketMine-MP/releases"`).toString());
 var url_linux, url_win
-for (let urls of execSync(`wget -qO- --user-agent="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36" "https://www.minecraft.net/en-us/download/server/bedrock" | lynx -dump -stdin`).toString().split(/\n/gi).filter(data => {return (data.includes("bin-"))})){
+for (let urls of wget("https://www.minecraft.net/en-us/download/server/bedrock").filter(data => {return (data.includes("bin-"))})){
     for (let _i of urls.split(/\s+/g)) {if (_i.includes("http")) {if (_i.includes("bin-win")) url_win = _i; else if (_i.includes("bin-linux")) url_linux = _i;};}
 }
 const winSplit = url_win.split("/");
-const BedrockServerVersion = winSplit[(winSplit.length - 1)].replace("bedrock-server-", "").replaceAll(".zip", "")
+const BedrockServerVersion = winSplit[(winSplit.length - 1)].replace("bedrock-server-", "").split(".zip").join("")
 console.log(`Windows Bedrock URL: ${url_win}\nLinux Bedrock URL: ${url_linux}\n\nVersion: ${BedrockServerVersion}\n`)
 
 // Bedrock
