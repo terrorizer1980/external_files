@@ -207,7 +207,7 @@ jobs:
         run: |
           cd Builds/workflows/
           npm install
-          tag_name="${{ github.run_id }}" node php_get.js
+          tag_name="php_bin_${{ github.run_id }}" node php_get.js
 
       - name: Publish php_bin.json
         run: |
