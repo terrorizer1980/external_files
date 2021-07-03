@@ -177,11 +177,12 @@ jobs:
           mv -v /tmp/TMPBins/*/*.zip /tmp/Bins/
 
       - name: Remove old Releases
-        uses: dev-drprasad/delete-older-releases@master
+        uses: Sirherobrine23/delete-older-releases@master
         with:
           keep_latest: 1
           delete_tags: true
-          delete_tag_pattern: PHP bin
+          pattern_regex: true
+          delete_tag_pattern: php_bin_.*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -191,8 +192,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: PHP bin
-          tag_name: ${{ github.run_id }}
+          name: "PHP Binary: ${{ github.run_id }}"
+          tag_name: php_bin_${{ github.run_id }}
           files: |
             /tmp/Bins/*.zip
           body: |
