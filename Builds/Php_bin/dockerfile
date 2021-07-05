@@ -1,0 +1,13 @@
+FROM ubuntu:latest AS amd64-php
+USER root
+ENV DEBIAN_FRONTEND="noninteractive"
+RUN apt update && apt install -y build-essential make wget gzip bzip2 bison git cmake re2c autoconf automake pkg-config libtool* unzip zip && mkdir -p /tmp/out/
+COPY ./build.sh /entry.sh 
+RUN  chmod a+x /entry.sh
+ENTRYPOINT [ "/entry.sh" ]
+
+# Android
+FROM amd64-php AS android
+COPY ./build-android.sh /entry.sh 
+RUN  chmod a+x /entry.sh
+ENTRYPOINT [ "/entry.sh" ]

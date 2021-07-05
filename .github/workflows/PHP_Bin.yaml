@@ -1,0 +1,220 @@
+on:
+  schedule:
+    - cron: 0 0 * * */6
+  watch:
+    type: [started]
+
+name: php bin auto build
+jobs:
+  Linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+        with:
+            ref: main
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKER_ORG_USER }}
+          password: ${{ secrets.DOCKER_ORG_PASS }}
+
+      - name: Pull
+        run: docker pull sirherobrine23/phpbinbuild:latest
+
+      - name: Create Docker image to amd64, aarch64, and Android aarch64
+        run: |
+          cd Builds/Php_bin/
+          docker buildx build --tag sirherobrine23/phpbinbuild:latest --push --target=amd64-php --platform linux/amd64,linux/arm64 --file dockerfile .
+
+      - name: Copiler php linux amd64, and linux aarch64
+        run: |
+          cd Builds/Php_bin/
+          docker manifest inspect --verbose sirherobrine23/phpbinbuild:latest > /tmp/ubuntuDoc
+          JsonID=0
+          while true
+          do
+            manifest="$(cat /tmp/ubuntuDoc | jq -r ".[${JsonID}].Descriptor.digest")"
+            if [ "${manifest}" == "null" ];then break;fi
+            echo "docker run --rm -v $PWD:/tmp/out sirherobrine23/phpbinbuild:latest@$manifest"
+            echo "docker run --rm -v $PWD:/tmp/out sirherobrine23/phpbinbuild:latest@$manifest" | bash
+            JsonID="$(($JsonID + 1))"
+          done
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Linux
+          path: Builds/Php_bin/*.zip
+          retention-days: 1
+
+  Android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+        with:
+            ref: main
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKER_ORG_USER }}
+          password: ${{ secrets.DOCKER_ORG_PASS }}
+
+      - name: Pull
+        run: docker pull sirherobrine23/phpbinbuild:latest
+
+      - name: Create Docker image to amd64, aarch64, and Android aarch64
+        run: |
+          cd Builds/Php_bin/
+          docker buildx build --tag sirherobrine23/phpbinbuild:android --push --target=android --platform linux/amd64,linux/arm64 --file dockerfile .
+
+      - name: Copiler php android aarch64
+        run: |
+          cd Builds/Php_bin/
+          echo "docker run --rm -v $PWD:/tmp/out sirherobrine23/phpbinbuild:android"
+          echo "docker run --rm -v $PWD:/tmp/out sirherobrine23/phpbinbuild:android" | bash
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Android
+          path: Builds/Php_bin/*.zip
+          retention-days: 1
+
+  Windows:
+    runs-on: windows-latest
+    steps:
+      - name: clone pmmp/php-build-scripts
+        uses: actions/checkout@main
+        with:
+            ref: stable
+            repository: pmmp/php-build-scripts
+      - name: clone ${{ github.ref }}
+        uses: actions/checkout@main
+        with:
+          path: rawBds
+
+      - name: Wget Install
+        run: choco install wget --no-progress
+
+      - name: PHP Copiler
+        env:
+          VS_EDITION: Enterprise
+          SOURCES_PATH: ${{ github.workspace }}\pocketmine-php-sdk
+        shell: cmd
+        run: windows-compile-vs.bat
+
+      - name: PHP Zip bin
+        run: |
+          dir
+          7z a Windows_x64_php.zip bin
+          node rawBds/Builds/Php_bin/windowsRename.js
+
+      - name: Log
+        run: type compile.log
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Windows
+          path: |
+            *.zip
+            !*debug*.zip
+          retention-days: 1
+
+  MacOS:
+    runs-on: macos-latest
+    steps:
+      - name: Install Depedencied
+        run: brew install libtool autoconf automake pkg-config bison re2c
+
+      - name: clone pmmp/php-build-scripts
+        uses: actions/checkout@main
+        with:
+            ref: stable
+            repository: pmmp/php-build-scripts
+
+      - name: PHP Copiler
+        run: |
+          export PATH="/usr/local/opt/bison/bin:$PATH"
+          set -ex
+          . compile.sh -t mac64 -f -u -g -l
+          zip MacOS_$(uname -m | sed 's|86_||g')_php.zip -r bin/
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Macos
+          path: MacOS_*.zip
+          retention-days: 1
+
+  Publish:
+    runs-on: ubuntu-latest
+    needs: [ Linux, Android, Windows, MacOS ]
+    steps:
+      # Setup Node
+      - name: Setup Node JS
+        uses: actions/setup-node@v1
+        with:
+          node-version: 15.x
+
+      # Download Files
+      - name: Download Bins
+        uses: actions/download-artifact@v2
+        with:
+          path: /tmp/TMPBins
+      - run: |
+          mkdir -p /tmp/Bins/
+          mv -v /tmp/TMPBins/*/*.zip /tmp/Bins/
+
+      - name: Remove old Releases
+        uses: Sirherobrine23/delete-older-releases@master
+        with:
+          keep_latest: 1
+          delete_tags: true
+          pattern_regex: true
+          delete_tag_pattern: php_bin_.*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Prepare files
+      - name: Publish PHP files bin
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: "PHP Binary: ${{ github.run_id }}"
+          tag_name: php_bin_${{ github.run_id }}
+          files: |
+            /tmp/Bins/*.zip
+          body: |
+            Windows users install the [Microsoft Visual C ++ 2017 Redistributable](https://aka.ms/vs/15/release/vc_redist.x64.exe)
+
+      - uses: actions/checkout@main
+        with:
+            ref: main
+
+      - name: Prepare Json
+        run: |
+          cd Builds/Php_bin/
+          npm install
+          tag_name="php_bin_${{ github.run_id }}" node php_json.js
+
+      - name: Publish php_bin.json
+        run: |
+          set -ex
+          git config --global user.email 'github-actions@github.com'
+          git config --global user.name 'github-actions[bot]'
+          git config --global http.postBuffer 157286400 sslVerify=false
+          git add ./php_bin.json
+          git commit -m "Publish PHP bins Json" -m "Run id: ${{ github.run_id }}"
+          git push

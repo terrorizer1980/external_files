@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "adm-zip": "^0.5.5"
+  }
+}
