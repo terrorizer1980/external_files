@@ -115,9 +115,14 @@ for (let index of pocketmine_json){
 // for (let jspri of GetJson("https://api.github.com/repos/JSPrismarine/JSPrismarine/commits")) {}
 
 // Add Old in new
+// jqva
 for (let java of Object.getOwnPropertyNames(oldServer.java)){new_Server.java[java] = oldServer.java[java]}
+
+// bedrock
 for (let bedrock of Object.getOwnPropertyNames(oldServer.bedrock)){new_Server.bedrock[bedrock] = oldServer.bedrock[bedrock]}
-for (let PocketMine of Object.getOwnPropertyNames(oldServer.PocketMine)){new_Server.PocketMine[PocketMine] = oldServer.PocketMine[PocketMine]}
+
+// pocketmine
+for (let PocketMine of Object.getOwnPropertyNames(oldServer.pocketmine)){new_Server.pocketmine[PocketMine] = oldServer.pocketmine[PocketMine]}
 
 // Write file
 writeFileSync(Server_path, JSON.stringify(new_Server, null, 4));
