@@ -2,7 +2,7 @@
     "latest": {
         "java": "1.17",
         "bedrock": "1.17.2.01",
-        "pocketmine": "3.21.0",
+        "pocketmine": "3.21.1",
         "jsprismarine": null
     },
     "java": {
@@ -524,6 +524,10 @@
         }
     },
     "pocketmine": {
+        "3.21.1": {
+            "url": "https://github.com/pmmp/PocketMine-MP/releases/download/3.21.1/PocketMine-MP.phar",
+            "data": "2021/7/5"
+        },
         "3.21.0": {
             "url": "https://github.com/pmmp/PocketMine-MP/releases/download/3.21.0/PocketMine-MP.phar",
             "data": "2021/6/13"

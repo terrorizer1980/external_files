@@ -22,25 +22,30 @@ const new_Server = {
 
 // Functions
 function wget(url = "https://google.com"){
-    const command = (`curl -H "user-agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36" "${url}"`)
+    const command = (`curl -sS -H "user-agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36" "${url}"`)
     console.log(command)
     const _a = execSync(command).toString().split(/["']/gi).filter(d=>/http[s]:/.test(d))
     return _a
 }
 function lynx(url = "https://google.com"){
-    const command = (`curl -H "user-agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36" "${url}" | lynx -dump -stdin`)
-    console.log(command)
+    const command = (`curl -sS -H "user-agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36" "${url}" | lynx -dump -stdin`)
+    // console.log(command)
     const _a = execSync(command).toString()
     return _a
 }
 
 function GetJson(url = ""){
-    const _a = execSync(`curl ${url}`).toString()
+    const _a = execSync(`curl -Ss ${url}`).toString()
     return JSON.parse(_a)
 }
 
+// java
 const javaLynx = lynx("https://www.minecraft.net/en-us/download/server").split("\n")
-const pocketmine_json = JSON.parse(execSync(`curl -sS "https://api.github.com/repos/pmmp/PocketMine-MP/releases"`).toString());
+
+// Pocketmine
+const pocketmine_json = GetJson("https://api.github.com/repos/pmmp/PocketMine-MP/releases")
+
+// Bedrock
 var url_linux, url_win
 for (let urls of wget("https://www.minecraft.net/en-us/download/server/bedrock").filter(data => {return (data.includes("bin-"))})){
     for (let _i of urls.split(/\s+/g)) {if (_i.includes("http")) {if (_i.includes("bin-win")) url_win = _i; else if (_i.includes("bin-linux")) url_linux = _i;};}
@@ -102,17 +107,27 @@ new_Server.latest.pocketmine = pocketmine_json[0].tag_name
 for (let index of pocketmine_json){
     if (!(old_Server_file.includes(index.tag_name))) {
         let data = new Date(index.published_at)
-        new_Server.PocketMine[index.tag_name] = {
+        new_Server.pocketmine[index.tag_name] = {
             url: `https://github.com/pmmp/PocketMine-MP/releases/download/${index.tag_name}/PocketMine-MP.phar`,
             data: `${data.getFullYear()}/${data.getMonth() +1}/${data.getDate()}`
         }
-        console.log(new_Server.PocketMine[index.tag_name]);
+        console.log(new_Server.pocketmine[index.tag_name]);
     }
 }
 
 // JSPrismarine 
 // https://api.github.com/repos/JSPrismarine/JSPrismarine/commits
-// for (let jspri of GetJson("https://api.github.com/repos/JSPrismarine/JSPrismarine/commits")) {}
+// https://api.github.com/repos/JSPrismarine/JSPrismarine/releases
+// for (let index of GetJson("https://api.github.com/repos/JSPrismarine/JSPrismarine/releases")) {
+//     if (!(old_Server_file.includes(index.tag_name))) {
+//         let data = new Date(index.published_at)
+//         new_Server.jsprismarine[index.tag_name] = {
+//             url: index.html_url,
+//             data: `${data.getFullYear()}/${data.getMonth() +1}/${data.getDate()}`
+//         }
+//         console.log(new_Server.jsprismarine[index.tag_name]);
+//     }
+// }
 
 // Add Old in new
 // jqva
