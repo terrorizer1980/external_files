@@ -1,11 +1,15 @@
 {
     "latest": {
-        "java": "1.17",
+        "java": "1.17.1",
         "bedrock": "1.17.2.01",
         "pocketmine": "3.21.1",
         "jsprismarine": null
     },
     "java": {
+        "1.17.1": {
+            "url": "https://launcher.mojang.com/v1/objects/a16d67e5807f57fc4e550299cf20226194497dc2/server.jar",
+            "data": "2021/7/6"
+        },
         "1.17": {
             "url": "https://launcher.mojang.com/v1/objects/0a269b5f2c5b93b1712d0f5dc43b6182b9ab254e/server.jar",
             "data": "2021/6/8"
