@@ -1,2 +1,3 @@
 php_files/*
 !php_files/README.md
+_Binary/php_build
