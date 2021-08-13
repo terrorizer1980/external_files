@@ -1,3 +1,11 @@
+# Node Modules
+node_modules/
+
+# Test Files
+test*.*
+
+# Others Files
 php_files/*
 !php_files/README.md
 _Binary/php_build
+php_bin_**/

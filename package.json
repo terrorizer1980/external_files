@@ -1,0 +1,26 @@
+{
+  "name": "external_files",
+  "description": "Bds Manager Core monotonous files, frequently updated.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/The-Bds-Maneger/external_files.git"
+  },
+  "dependencies": {
+    "@actions/core": "^1.4.0",
+    "adm-zip": "^0.5.5",
+    "jsdom": "^16.7.0",
+    "node-fetch": "^2.6.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/The-Bds-Maneger/external_files/issues"
+  },
+  "homepage": "https://github.com/The-Bds-Maneger/external_files#readme"
+}

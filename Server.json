@@ -3,7 +3,7 @@
         "java": "1.17.1",
         "bedrock": "1.17.11.01",
         "pocketmine": "3.22.1",
-        "jsprismarine": null
+        "spigot": "1.17.1"
     },
     "java": {
         "1.17.1": {
@@ -687,5 +687,194 @@
             "data": "2020/6/2"
         }
     },
-    "jsprismarine": {}
+    "spigot": [
+        {
+            "version": "1.17.1",
+            "url": "https://getbukkit.org/get/bf44510c50ddefccbaee1379c1f751de"
+        },
+        {
+            "version": "1.17",
+            "url": "https://getbukkit.org/get/67c4d7b1f88726687c09137464efed99"
+        },
+        {
+            "version": "1.16.5",
+            "url": "https://getbukkit.org/get/RD0y91OTotryPrElNQe4ovBLDNweoO5Z"
+        },
+        {
+            "version": "1.16.4",
+            "url": "https://getbukkit.org/get/MvbtKzCMFRVUPyKHvZ0cmiThXiiTSe92"
+        },
+        {
+            "version": "1.16.3",
+            "url": "https://getbukkit.org/get/gE0q5n55ASwgaQDavi0Bd3eA1u6gcJ4A"
+        },
+        {
+            "version": "1.16.2",
+            "url": "https://getbukkit.org/get/7LUCnzySfT9MMjs7oKi6SVW9ABSFQOTO"
+        },
+        {
+            "version": "1.16.1",
+            "url": "https://getbukkit.org/get/fDoqnvFqdhjFcURmY7Oqtzu0giKFAiyY"
+        },
+        {
+            "version": "1.15.2",
+            "url": "https://getbukkit.org/get/hJhavPDjhYFfqjyPAibsKAJecPpl7Z2V"
+        },
+        {
+            "version": "1.15.1",
+            "url": "https://getbukkit.org/get/1eb34a7d4db660bb88d02b6c8845957c"
+        },
+        {
+            "version": "1.15",
+            "url": "https://getbukkit.org/get/f7a491b66aa48e6c27951bea8eb0a96e"
+        },
+        {
+            "version": "1.14.4",
+            "url": "https://getbukkit.org/get/68aef01121494a41fe71890b81d69d07"
+        },
+        {
+            "version": "1.14.3",
+            "url": "https://getbukkit.org/get/OXb8OjkAKGTsilBzqRFLVHieYtApFLIa"
+        },
+        {
+            "version": "1.14.2",
+            "url": "https://getbukkit.org/get/rOScz7MyLKUMBoi0E0JcE70Mw7xpTkjk"
+        },
+        {
+            "version": "1.14.1",
+            "url": "https://getbukkit.org/get/7bOYW7B8tGXIbjU0lnomOa0fzL1q7PES"
+        },
+        {
+            "version": "1.14",
+            "url": "https://getbukkit.org/get/X4NhV4o180euQ3sd2noaYxUovXfspBIa"
+        },
+        {
+            "version": "1.13.2",
+            "url": "https://getbukkit.org/get/QMerkBxNGNl3EnQl8gACGfWuJnJtJuWB"
+        },
+        {
+            "version": "1.13.1",
+            "url": "https://getbukkit.org/get/Qfl9O9F65B2GaPvSPRDb89U0Sa7GNaUj"
+        },
+        {
+            "version": "1.13",
+            "url": "https://getbukkit.org/get/uedXO8YBkhXjZwDTUVfO85a7DzAn01aD"
+        },
+        {
+            "version": "1.12.2",
+            "url": "https://getbukkit.org/get/Fpt2yFn7HRTrot5uE1b8NFWtpQlYITgK"
+        },
+        {
+            "version": "1.12.1",
+            "url": "https://getbukkit.org/get/eIspoUd16rvAedlPFbWoixwdWvVzH1Uf"
+        },
+        {
+            "version": "1.12",
+            "url": "https://getbukkit.org/get/5de3b1b274cdfa6dc8d9ce338e340a22"
+        },
+        {
+            "version": "1.11.2",
+            "url": "https://getbukkit.org/get/FnLNb42htOpfvn3NaEmYKXGmptFx4CjU"
+        },
+        {
+            "version": "1.11.1",
+            "url": "https://getbukkit.org/get/PjKHpa0uqjBsBspBqRJ9KqGnrOk1RFad"
+        },
+        {
+            "version": "1.11",
+            "url": "https://getbukkit.org/get/kKRwYhR9rYKVNqdYDWRS4imesZtxrIkp"
+        },
+        {
+            "version": "1.10.2",
+            "url": "https://getbukkit.org/get/GE9W5jg4MkD62LHEDIC6BiijPbkxoWb3"
+        },
+        {
+            "version": "1.10",
+            "url": "https://getbukkit.org/get/fEz2lZqYIFfzdPbyKQyq41EePiAcYgHW"
+        },
+        {
+            "version": "1.9.4",
+            "url": "https://getbukkit.org/get/aVtd1rm66P6ut7XRlr5BzInJ409qEFCo"
+        },
+        {
+            "version": "1.9.2",
+            "url": "https://getbukkit.org/get/7VixMoIblTnCdTeJeXVXRW5pcQ1XRzJi"
+        },
+        {
+            "version": "1.9",
+            "url": "https://getbukkit.org/get/jVOffEqHFAlYjYFvN7eUa7CVQ9utK1Hf"
+        },
+        {
+            "version": "1.8.8",
+            "url": "https://getbukkit.org/get/hNiHm0tuqAg1Xg7w7zudk63uHr0xo48D"
+        },
+        {
+            "version": "1.8.7",
+            "url": "https://getbukkit.org/get/ZfA7Vh1Su9xUo43wJsQ9eT4EtOyCQlIM"
+        },
+        {
+            "version": "1.8.6",
+            "url": "https://getbukkit.org/get/CxDnpIsOg4ZnOv7UfIMf8iOyVYPjWlX1"
+        },
+        {
+            "version": "1.8.5",
+            "url": "https://getbukkit.org/get/Nzt8ugpvQN7vpQvpiZzf3NqxCh4OgyEC"
+        },
+        {
+            "version": "1.8.4",
+            "url": "https://getbukkit.org/get/xbGOoq96qVM11glAHHcTWPk5eh6m6CRv"
+        },
+        {
+            "version": "1.8.3",
+            "url": "https://getbukkit.org/get/zId4E0jbd76ubLgiVP5aMfYoiJXFCYGf"
+        },
+        {
+            "version": "1.8",
+            "url": "https://getbukkit.org/get/WAH0jXqYA2s3Gzzg3toWHG1R3lHNCNZY"
+        },
+        {
+            "version": "1.7.10",
+            "url": "https://getbukkit.org/get/jWPoIQARZsxCjUaqXgj2UwcQWqQdUYDo"
+        },
+        {
+            "version": "1.7.9",
+            "url": "https://getbukkit.org/get/cV7cdkEtUZtsphLBfCVDlPhyJgjjU7Fl"
+        },
+        {
+            "version": "1.7.8",
+            "url": "https://getbukkit.org/get/YTYtYcRGzJAOdmQPhDZZn61dcfooa84n"
+        },
+        {
+            "version": "1.7.5",
+            "url": "https://getbukkit.org/get/q084rUh9FQIkKsEm806J7C6VFUuD5qvU"
+        },
+        {
+            "version": "1.7.2",
+            "url": "https://getbukkit.org/get/pNcKEbnVEmAccBdxJOf7dR3bF19Td3cq"
+        },
+        {
+            "version": "1.6.4",
+            "url": "https://getbukkit.org/get/REwrpCh6mMnUa0P41aGkD4qFPovoN8zm"
+        },
+        {
+            "version": "1.6.2",
+            "url": "https://getbukkit.org/get/QTe2gi4zCP8J7OBKNIf9V0hyIu0gFdUi"
+        },
+        {
+            "version": "1.5.2",
+            "url": "https://getbukkit.org/get/tkNg9YxulAy0eO5f50WzijtK03qJLs6r"
+        },
+        {
+            "version": "1.5.1",
+            "url": "https://getbukkit.org/get/wTxqiQqJRxhL4qAiPR1zHSxtLx2RzY6Y"
+        },
+        {
+            "version": "1.4.7",
+            "url": "https://getbukkit.org/get/YZ4WcsFdKdqlMuJFhFRobcDmJNYoWL0l"
+        },
+        {
+            "version": "1.4.6",
+            "url": "https://getbukkit.org/get/29mixbrJ32rlDGLn8L3dIe4jvkLPdgom"
+        }
+    ]
 }
