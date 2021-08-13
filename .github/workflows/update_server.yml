@@ -31,6 +31,9 @@ jobs:
         uses: peter-evans/create-pull-request@v3.10.0
         with:
           title: Servers Update
+          branch: Update_Server
+          assignees: Sirherobrine23
+          commit-message: Update Servers
           body: |
             - Oficial
                * Java: ${{ env.java_version }}
