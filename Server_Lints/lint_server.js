@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 const { execSync } = require("child_process");
-const { readFileSync, writeFileSync } = require("fs");
+const { readFileSync, writeFileSync, existsSync } = require("fs");
 const path = require("path");
-const { resolve, basename } = path;
+const { resolve, dirname } = path;
 const { tmpdir } = require("os");
 
 const { exportVariable } = require("@actions/core");
@@ -43,7 +43,9 @@ async function CreateLibZIP(url = "") {
                 libs.push("/lib/x86_64-linux-gnu/ld-2.31.so");
 
                 // Add ZIP File
-                libs.forEach(addInzip => zipLib.addLocalFile(addInzip, basename(addInzip)));
+                libs.forEach(addInzip => {
+                    if (existsSync(addInzip)) zipLib.addLocalFile(addInzip, dirname(addInzip));
+                });
                 
                 // Write ZIP File
                 const ZipFile = path.resolve(__dirname, "../linux_libries.zip");
