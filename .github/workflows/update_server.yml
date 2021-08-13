@@ -3,7 +3,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: 0 */3 * * *
+    - cron: 0 */4 * * *
 name: Server.json auto update
 jobs:
   json_update:
@@ -15,20 +15,26 @@ jobs:
         with:
           node-version: 16.x
       - uses: actions/checkout@master
-        with:
-          ref: main
-      - name: Install lynx and Check Versions
+      - name: Install Lynx
         run: |
-          sudo bash -c "apt update && apt install -y lynx curl" > /dev/null
-          npm install --no-save -d
-          node ./Server_Lints/lint_server.js
+           sudo apt update
+           sudo apt install -y lynx curl
 
-      - name: Commit Modifications
+      - name: Install Node Packages
+        run: npm install -d --no-save
+
+      - name: Check Versions
+        run: node ./Server_Lints/lint_server.js
+
+      - name: Create Pull Request
         continue-on-error: true
-        run: |
-          git config --global user.email 'github-actions@github.com'
-          git config --global user.name 'github-actions[bot]'
-          git config --global http.postBuffer 157286400 sslVerify=false
-          git add .
-          git commit -m "Update Server.json" -m "- bedrock Version: ${{ env.bedrock_version }}" -m "- java Version: ${{ env.java_version }}" -m "- PocketMine Version: ${{ env.pocketmine_version }}"
-          git push
+        uses: peter-evans/create-pull-request@v3.10.0
+        with:
+          title: Servers Update
+          body: |
+            - Oficial
+               * Java: ${{ env.java_version }}
+               * Bedrock: ${{ env.bedrock_version }}
+            - third party
+               * Pocketmine-MP: ${{ env.pocketmine_version }}
+               * Spigot: ${{ env.spigot_version }}
