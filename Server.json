@@ -689,10 +689,6 @@
     },
     "spigot": [
         {
-            "version": "1.17.1",
-            "url": "https://getbukkit.org/get/bf44510c50ddefccbaee1379c1f751de"
-        },
-        {
             "version": "1.17",
             "url": "https://getbukkit.org/get/67c4d7b1f88726687c09137464efed99"
         },
