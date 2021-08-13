@@ -1,9 +1,60 @@
 #!/usr/bin/env node
 const { execSync } = require("child_process");
 const { readFileSync, writeFileSync } = require("fs");
-const { resolve } = require("path");
+const path = require("path");
+const { resolve, basename } = path;
+const { tmpdir } = require("os");
+
 const { exportVariable } = require("@actions/core");
-const { GetJson, lynx, Fetch_Minecraft_net, Spigot_Lint } = require("./fetch");
+const adm_zip = require("adm-zip");
+const { GetJson, Fetch_Minecraft_net } = require("./fetch");
+const { JSDOM } = require("jsdom");
+
+async function Spigot_Lint(){
+    return new Promise((resolve, reject)=>{
+        Fetch_Minecraft_net("https://getbukkit.org/download/spigot").then(res => {
+            let html_file = res.toString();
+            const returns = []
+            new JSDOM(html_file).window.document.querySelectorAll("#download > div > div > div > div").forEach(DOM => {
+                const New_Dom = {
+                    version: DOM.querySelector("div:nth-child(1) > h2").innerHTML.trim(),
+                    url: DOM.querySelector("div:nth-child(4) > div:nth-child(2) > a").href,
+                }
+                returns.push(New_Dom)
+            })
+            resolve(returns);
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
+async function CreateLibZIP(url = "") {
+    return new Promise((resolve, reject) => {
+        fetch(url).then(res => res.arrayBuffer()).then(res => Buffer.from(res)).then(res => {
+            try {
+                const zip = new adm_zip(res);
+                const zipLib = new adm_zip();
+                const Bedrock_Path = path.resolve(tmpdir(), "Bedrock")
+                zip.extractAllTo(Bedrock_Path, true);
+                
+                // Get Paths
+                const libs = execSync(`ldd "${path.join(Bedrock_Path, "bedrock_server")}"`).toString().split(/\n|\t/gi).filter(a => a.trim()).filter(b => b.includes("/")).map(c => c.replace(/\s+\(.*\)/gi, "")).map(d => d.replace(/.*=>/gi, "").trim())
+                libs.push("/lib/x86_64-linux-gnu/ld-2.31.so");
+
+                // Add ZIP File
+                libs.forEach(addInzip => zipLib.addLocalFile(addInzip, basename(addInzip)));
+                
+                // Write ZIP File
+                const ZipFile = path.resolve(__dirname, "../linux_libries.zip");
+                zipLib.writeZip(ZipFile);
+                return resolve(ZipFile);
+            } catch (e) {
+                return reject(e);
+            }
+        }).catch(err => reject(err));
+    });
+}
 
 (async () => {
     const Server_path = resolve(__dirname, "../Server.json");
@@ -22,67 +73,52 @@ const { GetJson, lynx, Fetch_Minecraft_net, Spigot_Lint } = require("./fetch");
         spigot: {}
     }
     
-    // Functions
-    
-    
-    // java
-    const javaLynx = lynx("https://www.minecraft.net/en-us/download/server").split("\n")
-    
-    // Pocketmine
+    // Get Pre URLs
+    const javaLynx = (await Fetch_Minecraft_net("https://www.minecraft.net/en-us/download/server")).toString();
     const pocketmine_json = await GetJson("https://api.github.com/repos/pmmp/PocketMine-MP/releases")
-    
+    const bedrock_urls = (await Fetch_Minecraft_net("https://www.minecraft.net/en-us/download/server/bedrock")).get_Urls().filter(d => /bin-/.test(d))
     // Bedrock
-    var url_linux, url_win
-    for (let urls of (await Fetch_Minecraft_net("https://www.minecraft.net/en-us/download/server/bedrock")).get_Urls().filter(d => /bin-/.test(d))){
-        for (let _i of urls.split(/\s+/g)) {if (_i.includes("http")) {if (_i.includes("bin-win")) url_win = _i; else if (_i.includes("bin-linux")) url_linux = _i;};}
-    }
-    const winSplit = url_win.split("/");
-    const BedrockServerVersion = winSplit[(winSplit.length - 1)].replace("bedrock-server-", "").split(".zip").join("")
-    console.log(`Windows Bedrock URL: ${url_win}\nLinux Bedrock URL: ${url_linux}\n\nVersion: ${BedrockServerVersion}\n`)
-    
-    // Bedrock
-    function createZipLibries(){
-        execSync(`wget "${url_linux}" -O bedrock.zip && unzip -o bedrock.zip -d ./`, {cwd: "/tmp"});
-        var Zip = require("adm-zip");
-        Zip = new Zip();
-        const libs = execSync("ldd /tmp/bedrock_server").toString().split("\t").join("").split("\n")
-        var arrayLibs = [];
-        for (let lib of libs) {lib = lib.split(/\s+/g); if (lib.length === 4) arrayLibs.push(lib[2]); else if (lib[0].includes("/")) arrayLibs.push(lib[0]); else console.log(lib);}
-        arrayLibs.push("/lib/x86_64-linux-gnu/ld-2.31.so")
-        for (let addInzip of arrayLibs) {
-            var dir = addInzip.split("/");dir.pop(dir.length - 1);dir = dir.join("/");
-            Zip.addLocalFile(addInzip, dir);
+    var url_linux, url_win;
+    const Bedrock_JSON = {
+        x64: {
+            linux: "",
+            win32: ""
+        },
+        aarch64: {
+            linux: "",
+            win32: ""
         }
-        return Zip.writeZip(resolve(__dirname, "../linux_libries.zip"));
     }
+    bedrock_urls.forEach(urls => {
+        if (/win/.test(urls)) Bedrock_JSON.x64.win32 = urls;
+        else if (/linux/.test(urls)) {
+            if (/aarch64|arm64|arm/.test(urls)) Bedrock_JSON.aarch64.linux = urls;
+            else Bedrock_JSON.x64.linux = urls;
+        };
+    })
     
+    // Version
+    const BedrockServerVersion = Bedrock_JSON.x64.linux.replace(/[a-zA-Z:\/\-]/gi, "").replace(/^\.*/gi, "").replace(/\.*$/gi, "").trim();
     new_Server.latest.bedrock = BedrockServerVersion
-    if (oldServer.bedrock[BedrockServerVersion]) console.log("the bedrock platform is up to date, jumping");
-    else {
+    
+    // Bedrock
+    if (!(oldServer.bedrock[BedrockServerVersion])) {
         let data = new Date()
         new_Server.bedrock[BedrockServerVersion] = {
-            x64: {
-                linux: url_linux,
-                win32: url_win
-            },
+            ...Bedrock_JSON,
             data: `${data.getFullYear()}/${data.getMonth() +1}/${data.getDate()}`
         }
         console.log(new_Server.bedrock[BedrockServerVersion]);
     }
+    await CreateLibZIP(Bedrock_JSON.x64.linux)
     
     // Java
-    const JavaServerVersion = (function(){
-        var Version = javaLynx.filter(data => {return data.includes("java")}).filter(data => {return data.includes("-jar")})[0].trim().split(/\s+/g).filter((data) => {return !(data === "java" || data === "-jar" || data === "nogui" || data.includes("-Xm"))})[0].trim().split(/minecraft_server/).join("").split(/\.jar/).join("")
-        if (Version.startsWith(".")) Version = Version.replace(".", "")
-        return Version
-    })()
-    
-    new_Server.latest.java = JavaServerVersion
-    if (oldServer.java[JavaServerVersion]) console.log("the java platform is up to date, jumping");
-    else {
+    const JavaServerVersion = javaLynx.split(/["'<>]|\n|\t/gi).map(a => a.trim()).filter(a => a).filter(a => /[0-9\.]\.jar/.test(a))[0].split(/[a-zA-Z\.]/gi).map(a => a.trim()).filter(a => /[0-9]/.test(a)).join(".");
+    new_Server.latest.java = JavaServerVersion;
+    if (!(oldServer.java[JavaServerVersion])) {
         let data = new Date()
         new_Server.java[JavaServerVersion] = {
-            url: javaLynx.filter(data => {return data.includes("server.jar")})[0].split(/\s+/g).filter(data => {return data.includes("http")})[0],
+            url: javaLynx.split(/["'<>]|\n|\t/gi).map(a => a.trim()).filter(a => a).filter(a => /server*\.jar/.test(a))[0],
             data: `${data.getFullYear()}/${data.getMonth() +1}/${data.getDate()}`
         }
         console.log(new_Server.java[JavaServerVersion]);
