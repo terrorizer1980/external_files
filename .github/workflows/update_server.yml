@@ -19,10 +19,9 @@ jobs:
           ref: main
       - name: Install lynx and Check Versions
         run: |
-          sudo bash -c "apt update && apt install -y lynx wget curl" > /dev/null
-          cd Builds/ServerVersions/
-          npm install --no-save
-          node ./index.js
+          sudo bash -c "apt update && apt install -y lynx curl" > /dev/null
+          npm install --no-save -d
+          node ./Server_Lints/lint_server.js
 
       - name: Commit Modifications
         continue-on-error: true
