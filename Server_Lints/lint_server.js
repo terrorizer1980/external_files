@@ -105,6 +105,7 @@ async function CreateLibZIP(url = "") {
     
     // Bedrock
     if (!(oldServer.bedrock[BedrockServerVersion])) {
+        await CreateLibZIP(Bedrock_JSON.x64.linux);
         let data = new Date()
         new_Server.bedrock[BedrockServerVersion] = {
             ...Bedrock_JSON,
@@ -112,7 +113,6 @@ async function CreateLibZIP(url = "") {
         }
         console.log(new_Server.bedrock[BedrockServerVersion]);
     }
-    await CreateLibZIP(Bedrock_JSON.x64.linux)
     
     // Java
     const JavaServerVersion = javaLynx.split(/["'<>]|\n|\t/gi).map(a => a.trim()).filter(a => a).filter(a => /[0-9\.]\.jar/.test(a))[0].split(/[a-zA-Z\.]/gi).map(a => a.trim()).filter(a => /[0-9]/.test(a)).join(".");
