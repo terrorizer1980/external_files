@@ -12,6 +12,7 @@ const { JSDOM } = require("jsdom");
 
 async function Spigot_Lint(){
     return new Promise((resolve, reject)=>{
+        console.log("Fetching version to Spigot...");
         Fetch_Minecraft_net("https://getbukkit.org/download/spigot").then(res => {
             let html_file = res.toString();
             const returns = []
@@ -23,6 +24,7 @@ async function Spigot_Lint(){
                 returns.push(New_Dom)
             })
             resolve(returns);
+            console.log(`Feched latest versions to Spigot! (${returns[0].version})\n`);
         }).catch(err => {
             reject(err);
         });
@@ -49,7 +51,9 @@ async function CreateLibZIP(url = "") {
                 
                 // Write ZIP File
                 const ZipFile = path.resolve(__dirname, "../linux_libries.zip");
+                const ZipFileLinuxPath = path.resolve(__dirname, "../Linux/libs_amd64.zip");
                 zipLib.writeZip(ZipFile);
+                zipLib.writeZip(ZipFileLinuxPath);
                 return resolve(ZipFile);
             } catch (e) {
                 return reject(e);
@@ -76,9 +80,9 @@ async function CreateLibZIP(url = "") {
     }
     
     // Get Pre URLs
-    const javaLynx = (await Fetch_Minecraft_net("https://www.minecraft.net/en-us/download/server")).toString();
-    const pocketmine_json = await GetJson("https://api.github.com/repos/pmmp/PocketMine-MP/releases")
-    const bedrock_urls = (await Fetch_Minecraft_net("https://www.minecraft.net/en-us/download/server/bedrock")).get_Urls().filter(d => /bin-/.test(d))
+    console.log("Fetching latest versions to Bedrock...");
+    const bedrock_urls = (await Fetch_Minecraft_net("https://www.minecraft.net/en-us/download/server/bedrock")).get_Urls().filter(d => /bin-/.test(d));
+    
     // Bedrock
     var url_linux, url_win;
     const Bedrock_JSON = {
@@ -97,13 +101,10 @@ async function CreateLibZIP(url = "") {
             if (/aarch64|arm64|arm/.test(urls)) Bedrock_JSON.aarch64.linux = urls;
             else Bedrock_JSON.x64.linux = urls;
         };
-    })
-    
-    // Version
+    });
     const BedrockServerVersion = Bedrock_JSON.x64.linux.replace(/[a-zA-Z:\/\-]/gi, "").replace(/^\.*/gi, "").replace(/\.*$/gi, "").trim();
+    console.log(`Feched latest versions to Bedrock! (${BedrockServerVersion})\n`);
     new_Server.latest.bedrock = BedrockServerVersion
-    
-    // Bedrock
     if (!(oldServer.bedrock[BedrockServerVersion])) {
         await CreateLibZIP(Bedrock_JSON.x64.linux);
         let data = new Date()
@@ -113,7 +114,9 @@ async function CreateLibZIP(url = "") {
         }
         console.log(new_Server.bedrock[BedrockServerVersion]);
     }
-    
+
+    console.log("Fetching latest versions to Java...");
+    const javaLynx = (await Fetch_Minecraft_net("https://www.minecraft.net/en-us/download/server")).toString();
     // Java
     const JavaServerVersion = javaLynx.split(/["'<>]|\n|\t/gi).map(a => a.trim()).filter(a => a).filter(a => /[0-9\.]\.jar/.test(a))[0].split(/[a-zA-Z\.]/gi).map(a => a.trim()).filter(a => /[0-9]/.test(a)).join(".");
     new_Server.latest.java = JavaServerVersion;
@@ -125,6 +128,12 @@ async function CreateLibZIP(url = "") {
         }
         console.log(new_Server.java[JavaServerVersion]);
     }
+    console.log(`Feched latest versions to Java! (${JavaServerVersion})\n`);
+    
+
+    console.log("Fetching latest versions to PocketMine-MP...");
+    const pocketmine_json = await GetJson("https://api.github.com/repos/pmmp/PocketMine-MP/releases");
+    console.log(`Feched latest versions to PocketMine-MP! (${pocketmine_json[0].tag_name})\n`);
     
     // Pocketmine-MP
     new_Server.latest.pocketmine = pocketmine_json[0].tag_name
@@ -153,11 +162,62 @@ async function CreateLibZIP(url = "") {
     // pocketmine
     for (let PocketMine of Object.getOwnPropertyNames(oldServer.pocketmine)){new_Server.pocketmine[PocketMine] = oldServer.pocketmine[PocketMine]}
     
-    // Write file
+    // Create git commit template
+    const git_commit_template = ["# Server.json update", ""];
+
+    // Bedrock
+    if (oldServer.latest.bedrock === new_Server.latest.bedrock) {
+        const BedrockTextUpToDate = `- Bedrock up to date (${new_Server.latest.bedrock})\n`;
+        git_commit_template.push(BedrockTextUpToDate);
+        console.log(BedrockTextUpToDate);
+    } else {
+        const BedrockTextUpdate = `- Bedrock Update ${oldServer.latest.bedrock} to ${new_Server.latest.bedrock}\n`;
+        git_commit_template.push(BedrockTextUpdate);
+        console.log(BedrockTextUpdate);
+    }
+    
+    // Java
+    if (oldServer.latest.java === new_Server.latest.java) {
+        const javaTextUpToDate = `- Java up to date (${new_Server.latest.java})\n`;
+        git_commit_template.push(javaTextUpToDate);
+        console.log(javaTextUpToDate);
+    } else {
+        const javaTextUpdate = `- Java Update ${oldServer.latest.java} to ${new_Server.latest.java}\n`;
+        git_commit_template.push(javaTextUpdate);
+        console.log(javaTextUpdate);
+    }
+
+    // Pocketmine-MP
+    if (oldServer.latest.pocketmine === new_Server.latest.pocketmine) {
+        const PocketmineTextUpToDate = `- Pocketmine-MP up to date (${new_Server.latest.pocketmine})\n`;
+        git_commit_template.push(PocketmineTextUpToDate);
+        console.log(PocketmineTextUpToDate);
+    } else {
+        const PocketmineTextUpdate = `- Pocketmine-MP Update ${oldServer.latest.pocketmine} to ${new_Server.latest.pocketmine}\n`;
+        git_commit_template.push(PocketmineTextUpdate);
+        console.log(PocketmineTextUpdate);
+    }
+
+    // Spigot
+    if (oldServer.latest.spigot === new_Server.latest.spigot) {
+        const SpigotTextUpToDate = `- Spigot up to date (${new_Server.latest.spigot})\n`;
+        git_commit_template.push(SpigotTextUpToDate);
+        console.log(SpigotTextUpToDate);
+    } else {
+        const SpigotTextUpdate = `- Spigot Update ${oldServer.latest.spigot} to ${new_Server.latest.spigot}\n`;
+        git_commit_template.push(SpigotTextUpdate);
+        console.log(SpigotTextUpdate);
+    }
+
+    // Write commit file
+    writeFileSync(resolve(__dirname, "../.commit_template.md"), git_commit_template.join("\n"));
+    
+    // Write Server.json file
     writeFileSync(Server_path, JSON.stringify(new_Server, null, 4));
     
-    exportVariable("pocketmine_version", new_Server.latest.pocketmine)
-    exportVariable("java_version", new_Server.latest.java)
-    exportVariable("bedrock_version", new_Server.latest.bedrock)
-    exportVariable("spigot_version", new_Server.latest.spigot)
+    // Export variables
+    exportVariable("pocketmine_version", new_Server.latest.pocketmine);
+    exportVariable("java_version", new_Server.latest.java);
+    exportVariable("bedrock_version", new_Server.latest.bedrock);
+    exportVariable("spigot_version", new_Server.latest.spigot);
 })();

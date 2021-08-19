@@ -4,6 +4,9 @@ node_modules/
 # Test Files
 test*.*
 
+# Git Files
+.commit_template.md
+
 # Others Files
 php_files/*
 !php_files/README.md

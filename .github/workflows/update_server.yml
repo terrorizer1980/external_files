@@ -10,34 +10,27 @@ jobs:
     name: Sever.json update
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@master
       - name: Setup Node JS
         uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - uses: actions/checkout@master
       - name: Install Lynx
         run: |
-           sudo apt update
-           sudo apt install -y lynx curl
+          sudo apt update
+          sudo apt install -y lynx curl
 
       - name: Install Node Packages
         run: npm install -d --no-save
 
       - name: Check Versions
-        run: node ./Server_Lints/lint_server.js
+        run: npm run find_new_version
 
-      - name: Create Pull Request
+      - name: Create Commit Files
         continue-on-error: true
-        uses: peter-evans/create-pull-request@v3.10.0
-        with:
-          title: Servers Update
-          branch: Update_Server
-          assignees: Sirherobrine23
-          commit-message: Update Servers
-          body: |
-            - Oficial
-               * Java: ${{ env.java_version }}
-               * Bedrock: ${{ env.bedrock_version }}
-            - third party
-               * Pocketmine-MP: ${{ env.pocketmine_version }}
-               * Spigot: ${{ env.spigot_version }}
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Update Server.json" -F .commit_template.md
+          git push

@@ -17,7 +17,7 @@ function Fetch_Minecraft_net(url = "https://www.minecraft.net/en-us/download/ser
                 "sec-fetch-user": "?1",
                 "sec-fetch-dest": "document",
                 "accept-encoding": "gzip, deflate, br",
-                "accept-language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+                "accept-language": "en-US,en;q=0.9,en-US;q=0.8,en;q=0.7",
             },
         }).then(r=>r.text()).then(data => {
             resolve({
