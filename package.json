@@ -15,7 +15,7 @@
     "@actions/core": "^1.4.0",
     "adm-zip": "^0.5.5",
     "jsdom": "^16.7.0",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^3.1.1"
   },
   "keywords": [],
   "author": "",
