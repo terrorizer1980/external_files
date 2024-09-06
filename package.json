@@ -14,7 +14,7 @@
   "dependencies": {
     "@actions/core": "^1.4.0",
     "adm-zip": "^0.5.5",
-    "jsdom": "^16.7.0",
+    "jsdom": "^24.1.1",
     "node-fetch": "^2.6.1"
   },
   "keywords": [],
